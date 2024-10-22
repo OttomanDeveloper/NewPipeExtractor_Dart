@@ -55,7 +55,7 @@ android {
         implementation 'org.jsoup:jsoup:1.13.1'
         implementation 'org.mozilla:rhino:1.7.12'
         implementation ('com.github.spotbugs:spotbugs-annotations:4.8.3'){
-            force : true
+            force = true
         }
         implementation 'org.nibor.autolink:autolink:0.10.0'
         implementation 'junit:junit:4.13.1'
