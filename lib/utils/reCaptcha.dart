@@ -53,7 +53,8 @@ class _ReCaptchaPageState extends State<ReCaptchaPage> {
               icon: Icon(Icons.check_rounded),
               color: Colors.white,
               onPressed: () async {
-                String currentUrl = await (controller?.getUrl() as FutureOr<String?>) ?? url;
+                String currentUrl =
+                    await (controller?.getUrl() as FutureOr<String?>) ?? url;
                 var info = await NewPipeExtractorDart.extractorChannel
                     .invokeMethod('getCookieByUrl', {"url": currentUrl});
                 String? cookies = info['cookie'];
@@ -66,7 +67,9 @@ class _ReCaptchaPageState extends State<ReCaptchaPage> {
                     String? abuseCookie =
                         currentUrl.substring(abuseStart + 12, abuseEnd);
                     abuseCookie = await (NewPipeExtractorDart.extractorChannel
-                        .invokeMethod('decodeCookie', {"cookie": abuseCookie}) as FutureOr<String>);
+                            .invokeMethod(
+                                'decodeCookie', {"cookie": abuseCookie})
+                        as FutureOr<String>);
                     handleCookies(abuseCookie);
                   } catch (_) {}
                 }
@@ -79,8 +82,10 @@ class _ReCaptchaPageState extends State<ReCaptchaPage> {
         ),
         body: InAppWebView(
           initialUrlRequest: URLRequest(
-              url: Uri.parse(url), headers: ExtractorHttpClient.defaultHeaders),
-          onLoadStop: (cont, _) {
+            url: WebUri(url),
+            headers: ExtractorHttpClient.defaultHeaders,
+          ),
+          onLoadStop: (InAppWebViewController cont, _) {
             controller = cont;
           },
         ),
