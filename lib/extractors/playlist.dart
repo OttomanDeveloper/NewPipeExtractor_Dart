@@ -1,8 +1,6 @@
 import 'dart:convert';
 
 import 'package:newpipeextractor_dart/exceptions/badUrlException.dart';
-import 'package:newpipeextractor_dart/models/infoItems/video.dart';
-import 'package:newpipeextractor_dart/models/playlist.dart';
 import 'package:newpipeextractor_dart/newpipeextractor_dart.dart';
 import 'package:newpipeextractor_dart/utils/reCaptcha.dart';
 import 'package:newpipeextractor_dart/utils/streamsParser.dart';
