@@ -2,30 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:newpipeextractor_dart/newpipeextractor_dart.dart';
-import 'package:newpipeextractor_dart/utils/httpClient.dart';
-import 'package:newpipeextractor_dart/utils/navigationService.dart';
+import 'package:newpipeextractor_dart/src/utils/http_client.dart';
 
 bool resolvingCaptcha = false;
 
 class ReCaptchaPage extends StatefulWidget {
-  static Future<dynamic> checkInfo(info, Future<dynamic> task()) async {
-    if ((info as Map).containsKey("error")) {
-      if (info["error"].contains("reCaptcha")) {
-        if (!resolvingCaptcha) {
-          resolvingCaptcha = true;
-          String url = info["error"].split(":").last.trim();
-          await NavigationService.instance
-              .navigateTo("reCaptcha", "http:" + url);
-          var newInfo = await task();
-          resolvingCaptcha = false;
-          return newInfo;
-        }
-      }
-    } else {
-      return info;
-    }
-  }
+  const ReCaptchaPage({super.key});
 
   @override
   _ReCaptchaPageState createState() => _ReCaptchaPageState();
@@ -53,28 +35,6 @@ class _ReCaptchaPageState extends State<ReCaptchaPage> {
               icon: Icon(Icons.check_rounded),
               color: Colors.white,
               onPressed: () async {
-                String currentUrl =
-                    await (controller?.getUrl() as FutureOr<String?>) ?? url;
-                var info = await NewPipeExtractorDart.extractorChannel
-                    .invokeMethod('getCookieByUrl', {"url": currentUrl});
-                String? cookies = info['cookie'];
-                handleCookies(cookies);
-                // Sometimes cookies are inside the url
-                final int abuseStart = currentUrl.indexOf("google_abuse=");
-                if (abuseStart != -1) {
-                  final int abuseEnd = currentUrl.indexOf("+path");
-                  try {
-                    String? abuseCookie =
-                        currentUrl.substring(abuseStart + 12, abuseEnd);
-                    abuseCookie = await (NewPipeExtractorDart.extractorChannel
-                            .invokeMethod(
-                                'decodeCookie', {"cookie": abuseCookie})
-                        as FutureOr<String>);
-                    handleCookies(abuseCookie);
-                  } catch (_) {}
-                }
-                await NewPipeExtractorDart.extractorChannel
-                    .invokeMethod('setCookie', {"cookie": foundCookies});
                 Navigator.pop(context);
               },
             ),
