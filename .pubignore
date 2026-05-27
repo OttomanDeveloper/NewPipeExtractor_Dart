@@ -1,0 +1,15 @@
+# Exclude planning/design docs from published package
+docs/
+
+# Exclude build artifacts
+build/
+
+# Exclude Android IDE files
+android/.idea/
+
+# Exclude pigeon source (generated code is already in lib/)
+pigeons/
+
+# Exclude IDE files
+*.iml
+.metadata

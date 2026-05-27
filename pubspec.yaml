@@ -3,19 +3,27 @@ description: >
   Flutter plugin wrapping NewPipe Extractor for YouTube data extraction.
   Extract video info, streams, subtitles, comments, channels, playlists,
   search results, and trending content — no API key required.
-publish_to: none
+# publish_to: none
 version: 1.0.0
 homepage: https://github.com/OttomanDeveloper/NewPipeExtractor_Dart.git
 repository: https://github.com/OttomanDeveloper/NewPipeExtractor_Dart.git
 issue_tracker: https://github.com/OttomanDeveloper/NewPipeExtractor_Dart/issues
 
+topics:
+  - youtube
+  - video
+  - extractor
+  - newpipe
+  - streaming
+
 environment:
     sdk: ">=3.0.0 <4.0.0"
+    flutter: ">=3.10.0"
 
 dependencies:
     flutter:
         sdk: flutter
-    http: any
+    http: ^0.13.5
     flutter_inappwebview: ^6.1.5
     freezed_annotation: ^2.4.0
     json_annotation: ^4.9.0

@@ -1,0 +1,19 @@
+name: newpipeextractor_dart_example
+description: Example app for newpipeextractor_dart plugin.
+publish_to: none
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  newpipeextractor_dart:
+    path: ../
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true

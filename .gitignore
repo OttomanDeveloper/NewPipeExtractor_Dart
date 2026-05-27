@@ -9,7 +9,9 @@ build/
 *.iml
 .metadata
 
-# Generated (but track Pigeon output)
+# Generated (but track Pigeon output and model codegen for pub.dev consumers)
 *.g.dart
 *.freezed.dart
 !lib/src/generated/*.g.dart
+!lib/src/models/**/*.g.dart
+!lib/src/models/**/*.freezed.dart
