@@ -31,21 +31,28 @@ class ExtractorHttpClient {
             request.headers[key] = defaultHeaders[key]!;
           }
         });
+        if (headers != null) {
+          headers.forEach((key, value) {
+            request.headers[key] = value;
+          });
+        }
         final response = await client.send(request);
         if (validate) {
           _validateResponse(response, response.statusCode);
         }
-        final stream = StreamController<List<int>>();
+        final controller = StreamController<List<int>>();
         response.stream.listen((data) {
           bytesCount += data.length;
-          stream.add(data);
-        }, onError: (_) => null, onDone: stream.close, cancelOnError: false);
+          controller.add(data);
+        }, onError: (_) => null, onDone: controller.close, cancelOnError: false);
         errorCount = 0;
-        yield* stream.stream;
+        yield* controller.stream;
       } on Exception {
         if (errorCount == 5) {
+          client.close();
           rethrow;
         }
+        client.close();
         await Future.delayed(const Duration(milliseconds: 500));
         yield* getStream(stream,
             headers: headers,

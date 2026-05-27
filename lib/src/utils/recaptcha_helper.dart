@@ -13,7 +13,7 @@ Future<T> withReCaptchaRetry<T>(Future<T> Function() call) async {
     return await call();
   } on PlatformException catch (e) {
     if (e.code == 'RECAPTCHA' && _reCaptchaNavigator != null) {
-      final url = e.message ?? '';
+      final url = (e.details as String?) ?? e.message ?? '';
       await _reCaptchaNavigator!(url);
       return await call();
     }

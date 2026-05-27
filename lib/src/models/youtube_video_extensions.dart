@@ -29,14 +29,14 @@ extension YoutubeVideoHelpers on YoutubeVideo {
   }
 
   AudioOnlyStream? get audioWithBestAacQuality {
-    final aacStreams = audioOnlyStreams.where((s) => s.formatName == 'm4a').toList();
+    final aacStreams = audioOnlyStreams.where((s) => s.formatSuffix == 'm4a').toList();
     if (aacStreams.isEmpty) return audioWithHighestQuality;
     return aacStreams.reduce((a, b) =>
         a.averageBitrate >= b.averageBitrate ? a : b);
   }
 
   AudioOnlyStream? get audioWithBestOggQuality {
-    final oggStreams = audioOnlyStreams.where((s) => s.formatName == 'webm').toList();
+    final oggStreams = audioOnlyStreams.where((s) => s.formatSuffix == 'webm').toList();
     if (oggStreams.isEmpty) return audioWithHighestQuality;
     return oggStreams.reduce((a, b) =>
         a.averageBitrate >= b.averageBitrate ? a : b);

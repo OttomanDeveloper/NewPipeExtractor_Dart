@@ -31,9 +31,9 @@ void main() {
       final video = YoutubeVideo(
         videoInfo: const VideoInfo(),
         audioOnlyStreams: const [
-          AudioOnlyStream(url: 'a', averageBitrate: 256, formatName: 'webm'),
-          AudioOnlyStream(url: 'b', averageBitrate: 128, formatName: 'm4a'),
-          AudioOnlyStream(url: 'c', averageBitrate: 192, formatName: 'm4a'),
+          AudioOnlyStream(url: 'a', averageBitrate: 256, formatSuffix: 'webm'),
+          AudioOnlyStream(url: 'b', averageBitrate: 128, formatSuffix: 'm4a'),
+          AudioOnlyStream(url: 'c', averageBitrate: 192, formatSuffix: 'm4a'),
         ],
       );
       expect(video.audioWithBestAacQuality?.url, 'c');
@@ -43,8 +43,8 @@ void main() {
       final video = YoutubeVideo(
         videoInfo: const VideoInfo(),
         audioOnlyStreams: const [
-          AudioOnlyStream(url: 'ogg', averageBitrate: 256, formatName: 'webm'),
-          AudioOnlyStream(url: 'aac', averageBitrate: 128, formatName: 'm4a'),
+          AudioOnlyStream(url: 'ogg', averageBitrate: 256, formatSuffix: 'webm'),
+          AudioOnlyStream(url: 'aac', averageBitrate: 128, formatSuffix: 'm4a'),
         ],
       );
       const mp4Stream = VideoOnlyStream(url: 'v', formatSuffix: 'mp4');

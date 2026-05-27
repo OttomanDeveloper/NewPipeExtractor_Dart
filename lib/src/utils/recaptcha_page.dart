@@ -3,8 +3,6 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:newpipeextractor_dart/src/generated/extractor_api.g.dart';
 import 'package:newpipeextractor_dart/src/utils/http_client.dart';
 
-bool resolvingCaptcha = false;
-
 class ReCaptchaPage extends StatefulWidget {
   const ReCaptchaPage({super.key});
 
