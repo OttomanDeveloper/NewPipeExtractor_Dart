@@ -4,7 +4,7 @@ description: >
   Extract video info, streams, subtitles, comments, channels, playlists,
   search results, and trending content — no API key required.
 # publish_to: none
-version: 1.0.0
+version: 1.0.1
 homepage: https://github.com/OttomanDeveloper/NewPipeExtractor_Dart.git
 repository: https://github.com/OttomanDeveloper/NewPipeExtractor_Dart.git
 issue_tracker: https://github.com/OttomanDeveloper/NewPipeExtractor_Dart/issues

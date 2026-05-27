@@ -1,3 +1,9 @@
+## 1.0.1
+
+* Added pub.dev badges and updated installation instructions
+* Documentation improvements across all public API surfaces
+* Comprehensive CONTRIBUTING guide with architecture deep-dive
+
 ## 1.0.0
 
 ### Breaking Changes
