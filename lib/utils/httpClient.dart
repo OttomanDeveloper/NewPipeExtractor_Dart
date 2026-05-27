@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:newpipeextractor_dart/exceptions/fatalFailureException.dart';
 import 'package:newpipeextractor_dart/exceptions/requestLimitExceededException.dart';
-import 'package:newpipeextractor_dart/exceptions/transistentFailureException.dart';
+import 'package:newpipeextractor_dart/exceptions/transientFailureException.dart';
 
 class ExtractorHttpClient {
 

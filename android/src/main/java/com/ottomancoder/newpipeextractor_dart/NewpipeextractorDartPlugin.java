@@ -78,7 +78,7 @@ public class NewpipeextractorDartPlugin implements FlutterPlugin, MethodCallHand
     final SharedPreferences preferences = PreferenceManager
             .getDefaultSharedPreferences(context);
     final String cookie = preferences.getString(PREFS_COOKIES_KEY, null);
-    if (cookie != "") {
+    if (cookie != null && !cookie.isEmpty()) {
       DownloaderImpl.getInstance().setCookie(cookie);
     }
     channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "newpipeextractor_dart");
