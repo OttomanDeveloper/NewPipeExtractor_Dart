@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'stream_segment.freezed.dart';
 part 'stream_segment.g.dart';
 
+/// A video chapter/segment with title, preview image, and start time.
 @freezed
 class StreamSegment with _$StreamSegment {
   const factory StreamSegment({

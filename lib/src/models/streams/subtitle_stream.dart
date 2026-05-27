@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'subtitle_stream.freezed.dart';
 part 'subtitle_stream.g.dart';
 
+/// Subtitle/caption track with language, format, and auto-generation flag.
 @freezed
 class SubtitleStream with _$SubtitleStream {
   const factory SubtitleStream({

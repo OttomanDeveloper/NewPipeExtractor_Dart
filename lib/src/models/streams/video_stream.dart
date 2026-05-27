@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'video_stream.freezed.dart';
 part 'video_stream.g.dart';
 
+/// Muxed stream containing both video and audio. Capped at 720p by YouTube.
 @freezed
 class VideoStream with _$VideoStream {
   const factory VideoStream({

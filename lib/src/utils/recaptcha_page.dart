@@ -3,6 +3,15 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:newpipeextractor_dart/src/generated/extractor_api.g.dart';
 import 'package:newpipeextractor_dart/src/utils/http_client.dart';
 
+/// WebView page for solving YouTube reCAPTCHA challenges.
+///
+/// Pass the challenge URL via route arguments:
+/// ```dart
+/// Navigator.push(context, MaterialPageRoute(
+///   builder: (_) => const ReCaptchaPage(),
+///   settings: RouteSettings(arguments: challengeUrl),
+/// ));
+/// ```
 class ReCaptchaPage extends StatefulWidget {
   const ReCaptchaPage({super.key});
 

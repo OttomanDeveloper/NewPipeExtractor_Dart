@@ -3,6 +3,7 @@ import 'package:newpipeextractor_dart/src/models/enums.dart';
 part 'youtube_playlist.freezed.dart';
 part 'youtube_playlist.g.dart';
 
+/// YouTube playlist with metadata, thumbnail URLs, and playlist type classification.
 @freezed
 class YoutubePlaylist with _$YoutubePlaylist {
   const factory YoutubePlaylist({

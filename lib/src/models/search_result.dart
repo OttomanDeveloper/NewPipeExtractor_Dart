@@ -5,6 +5,7 @@ import 'package:newpipeextractor_dart/src/models/playlist_info_item.dart';
 part 'search_result.freezed.dart';
 part 'search_result.g.dart';
 
+/// Combined search results containing videos, playlists, and channels.
 @freezed
 class SearchResult with _$SearchResult {
   const factory SearchResult({

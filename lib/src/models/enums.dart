@@ -1,3 +1,4 @@
+/// Identifies the type of media stream.
 enum StreamType {
   videoStream,
   audioStream,
@@ -16,6 +17,7 @@ enum StreamType {
   };
 }
 
+/// Classifies the playlist origin.
 enum PlaylistType {
   normal,
   mixStream,
@@ -30,6 +32,7 @@ enum PlaylistType {
   };
 }
 
+/// Video privacy status.
 enum Privacy {
   public_,
   unlisted,
@@ -46,6 +49,7 @@ enum Privacy {
   };
 }
 
+/// Available channel tabs for browsing channel content.
 enum ChannelTab {
   videos,
   shorts,
@@ -65,6 +69,7 @@ enum ChannelTab {
   };
 }
 
+/// Search content type filters for YouTube and YouTube Music.
 enum SearchFilter {
   all('all'),
   videos('videos'),
@@ -80,6 +85,7 @@ enum SearchFilter {
   const SearchFilter(this.value);
 }
 
+/// NewPipe Extractor service identifiers.
 enum ServiceId {
   youtube(0),
   soundCloud(1),

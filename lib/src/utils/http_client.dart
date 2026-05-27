@@ -2,8 +2,10 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:newpipeextractor_dart/src/exceptions/extractor_exception.dart';
 
+/// Low-level HTTP utilities for stream downloading and content inspection.
 class ExtractorHttpClient {
 
+  /// Default User-Agent headers used for all HTTP requests.
   static const Map<String, String> defaultHeaders = {
     'user-agent':
         'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101 Firefox/68.0'
@@ -12,6 +14,7 @@ class ExtractorHttpClient {
   /// Byte range size for chunked downloads (~9.9 MB per request).
   static const int _chunkSize = 9898989;
 
+  /// Returns the content size in bytes for a stream URL via HTTP HEAD request.
   static Future<int?> getContentLength(String url) async {
     var response = await http.head(Uri.parse(url), headers: defaultHeaders);
     return int.tryParse(response.headers['content-length'] ?? '');

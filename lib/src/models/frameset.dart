@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'frameset.freezed.dart';
 part 'frameset.g.dart';
 
+/// Storyboard preview thumbnail grid used for video scrubbing previews.
 @freezed
 class Frameset with _$Frameset {
   const factory Frameset({

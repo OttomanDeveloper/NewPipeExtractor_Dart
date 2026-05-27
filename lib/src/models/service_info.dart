@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'service_info.freezed.dart';
 part 'service_info.g.dart';
 
+/// Describes an available extraction service (YouTube, SoundCloud, etc.).
 @freezed
 class ServiceInfo with _$ServiceInfo {
   const factory ServiceInfo({

@@ -3,6 +3,7 @@ import 'package:newpipeextractor_dart/src/models/enums.dart';
 part 'youtube_channel.freezed.dart';
 part 'youtube_channel.g.dart';
 
+/// YouTube channel metadata with subscriber count, verified status, and available tabs.
 @freezed
 class YoutubeChannel with _$YoutubeChannel {
   const factory YoutubeChannel({

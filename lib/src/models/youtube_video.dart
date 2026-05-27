@@ -9,6 +9,7 @@ import 'package:newpipeextractor_dart/src/models/frameset.dart';
 part 'youtube_video.freezed.dart';
 part 'youtube_video.g.dart';
 
+/// Complete video with metadata, media streams, subtitles, chapters, and storyboard frames.
 @freezed
 class YoutubeVideo with _$YoutubeVideo {
   const factory YoutubeVideo({

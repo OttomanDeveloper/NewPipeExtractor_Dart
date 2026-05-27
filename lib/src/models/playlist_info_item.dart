@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'playlist_info_item.freezed.dart';
 part 'playlist_info_item.g.dart';
 
+/// Lightweight playlist item used in search results.
 @freezed
 class PlaylistInfoItem with _$PlaylistInfoItem {
   const factory PlaylistInfoItem({

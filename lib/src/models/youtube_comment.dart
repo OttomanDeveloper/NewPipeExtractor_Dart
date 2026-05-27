@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'youtube_comment.freezed.dart';
 part 'youtube_comment.g.dart';
 
+/// A YouTube comment with author info, engagement metrics, and reply metadata.
 @freezed
 class YoutubeComment with _$YoutubeComment {
   const factory YoutubeComment({
@@ -17,6 +18,8 @@ class YoutubeComment with _$YoutubeComment {
     @Default(0) int replyCount,
     @Default(false) bool isChannelOwner,
     @Default(false) bool isUploaderVerified,
+
+    /// Timestamp in the video this comment references, in seconds. Null if not a timestamped comment.
     int? streamPosition,
   }) = _YoutubeComment;
 

@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'channel_info_item.freezed.dart';
 part 'channel_info_item.g.dart';
 
+/// Lightweight channel item used in search results.
 @freezed
 class ChannelInfoItem with _$ChannelInfoItem {
   const factory ChannelInfoItem({
