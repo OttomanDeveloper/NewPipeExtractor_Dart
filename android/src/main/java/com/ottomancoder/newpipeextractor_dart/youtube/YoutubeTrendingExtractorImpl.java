@@ -26,7 +26,7 @@ public class YoutubeTrendingExtractorImpl {
     private static ListExtractor.InfoItemsPage<StreamInfoItem> itemsPage;
 
     public static Map<Integer, Map<String, String>> getTrendingPage() throws Exception {
-        extractor = (YoutubeTrendingExtractor) YouTube.getKioskList().getDefaultKioskExtractor();
+        extractor = (YoutubeTrendingExtractor) YouTube.getKioskList().getExtractorById("Trending", null);
         extractor.forceLocalization(Localization.fromLocale(Locale.getDefault()));
         extractor.fetchPage();
         itemsPage = extractor.getInitialPage();

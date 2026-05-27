@@ -41,7 +41,7 @@ android {
     dependencies {
         coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'
         implementation 'androidx.annotation:annotation:1.1.0'
-        implementation 'com.github.teamnewpipe:NewPipeExtractor:v0.24.2'
+        implementation 'com.github.teamnewpipe:NewPipeExtractor:v0.26.2'
         implementation 'org.jsoup:jsoup:1.13.1'
         implementation 'org.mozilla:rhino:1.7.12'
         implementation ('com.github.spotbugs:spotbugs-annotations:4.8.3')
