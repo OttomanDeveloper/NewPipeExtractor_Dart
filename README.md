@@ -1,5 +1,9 @@
 # newpipeextractor_dart
 
+[![pub package](https://img.shields.io/pub/v/newpipeextractor_dart.svg)](https://pub.dev/packages/newpipeextractor_dart)
+[![pub points](https://img.shields.io/pub/points/newpipeextractor_dart)](https://pub.dev/packages/newpipeextractor_dart/score)
+[![likes](https://img.shields.io/pub/likes/newpipeextractor_dart)](https://pub.dev/packages/newpipeextractor_dart)
+
 A Flutter plugin that wraps the [NewPipe Extractor](https://github.com/TeamNewPipe/NewPipeExtractor) library (v0.26.2) for extracting media data from YouTube, SoundCloud, Bandcamp, PeerTube, and media.ccc.de on Android — no API key required.
 
 ## Table of Contents
@@ -60,15 +64,13 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  newpipeextractor_dart:
-    git:
-      url: https://github.com/OttomanDeveloper/NewPipeExtractor_Dart.git
+  newpipeextractor_dart: ^1.0.0
 ```
 
-Then run:
+Or install via command line:
 
 ```bash
-flutter pub get
+flutter pub add newpipeextractor_dart
 ```
 
 Import in your Dart code:
