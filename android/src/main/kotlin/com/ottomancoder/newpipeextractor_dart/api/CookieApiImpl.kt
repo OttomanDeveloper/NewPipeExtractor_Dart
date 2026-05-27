@@ -2,7 +2,7 @@ package com.ottomancoder.newpipeextractor_dart.api
 
 import android.content.Context
 import android.os.Handler
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import android.webkit.CookieManager
 import com.ottomancoder.newpipeextractor_dart.CookieApi
 import com.ottomancoder.newpipeextractor_dart.downloader.DownloaderImpl

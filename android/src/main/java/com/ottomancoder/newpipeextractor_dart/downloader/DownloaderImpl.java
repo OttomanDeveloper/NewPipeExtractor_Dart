@@ -63,7 +63,6 @@ public class DownloaderImpl extends Downloader {
                 resultCookies.add(youtubeCookie);
             }
         }
-        // Recaptcha cookie is always added TODO: not sure if this is necessary
         final String recaptchaCookie = getCookie(RECAPTCHA_COOKIES_KEY);
         if (recaptchaCookie != null) {
             resultCookies.add(recaptchaCookie);

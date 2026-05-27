@@ -2,7 +2,7 @@ package com.ottomancoder.newpipeextractor_dart
 
 import android.os.Handler
 import android.os.Looper
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import androidx.annotation.NonNull
 import com.ottomancoder.newpipeextractor_dart.api.*
 import com.ottomancoder.newpipeextractor_dart.downloader.DownloaderImpl
