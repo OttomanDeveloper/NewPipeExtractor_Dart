@@ -45,7 +45,13 @@ object ExtractorHelper {
             dashMpdUrl = tryOrNull { extractor.dashMpdUrl },
             isShort = tryOrNull { extractor.isShortFormContent },
             isUploaderVerified = tryOrNull { extractor.isUploaderVerified },
-            privacy = tryOrNull { extractor.privacy?.name }
+            privacy = tryOrNull { extractor.privacy?.name },
+            uploaderSubscriberCount = tryOrNull { extractor.uploaderSubscriberCount },
+            subChannelName = tryOrNull { extractor.subChannelName },
+            subChannelUrl = tryOrNull { extractor.subChannelUrl },
+            subChannelAvatars = tryOrNull { imagesToList(extractor.subChannelAvatars) },
+            licence = tryOrNull { extractor.licence },
+            supportInfo = tryOrNull { extractor.supportInfo }
         )
     }
 

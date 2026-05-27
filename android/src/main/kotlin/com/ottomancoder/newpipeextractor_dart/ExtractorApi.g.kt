@@ -69,7 +69,13 @@ data class VideoInfoDto (
   val dashMpdUrl: String? = null,
   val isShort: Boolean? = null,
   val isUploaderVerified: Boolean? = null,
-  val privacy: String? = null
+  val privacy: String? = null,
+  val uploaderSubscriberCount: Long? = null,
+  val subChannelName: String? = null,
+  val subChannelUrl: String? = null,
+  val subChannelAvatars: List<String?>? = null,
+  val licence: String? = null,
+  val supportInfo: String? = null
 )
  {
   companion object {
@@ -96,7 +102,13 @@ data class VideoInfoDto (
       val isShort = pigeonVar_list[19] as Boolean?
       val isUploaderVerified = pigeonVar_list[20] as Boolean?
       val privacy = pigeonVar_list[21] as String?
-      return VideoInfoDto(id, url, name, uploaderName, uploaderUrl, uploaderAvatars, uploadDate, description, length, viewCount, likeCount, dislikeCount, category, ageLimit, tags, thumbnails, streamType, hlsUrl, dashMpdUrl, isShort, isUploaderVerified, privacy)
+      val uploaderSubscriberCount = pigeonVar_list[22] as Long?
+      val subChannelName = pigeonVar_list[23] as String?
+      val subChannelUrl = pigeonVar_list[24] as String?
+      val subChannelAvatars = pigeonVar_list[25] as List<String?>?
+      val licence = pigeonVar_list[26] as String?
+      val supportInfo = pigeonVar_list[27] as String?
+      return VideoInfoDto(id, url, name, uploaderName, uploaderUrl, uploaderAvatars, uploadDate, description, length, viewCount, likeCount, dislikeCount, category, ageLimit, tags, thumbnails, streamType, hlsUrl, dashMpdUrl, isShort, isUploaderVerified, privacy, uploaderSubscriberCount, subChannelName, subChannelUrl, subChannelAvatars, licence, supportInfo)
     }
   }
   fun toList(): List<Any?> {
@@ -123,6 +135,12 @@ data class VideoInfoDto (
       isShort,
       isUploaderVerified,
       privacy,
+      uploaderSubscriberCount,
+      subChannelName,
+      subChannelUrl,
+      subChannelAvatars,
+      licence,
+      supportInfo,
     )
   }
 }
@@ -447,7 +465,10 @@ data class CommentDto (
   val likeCount: Long? = null,
   val hearted: Boolean? = null,
   val pinned: Boolean? = null,
-  val replyCount: Long? = null
+  val replyCount: Long? = null,
+  val isChannelOwner: Boolean? = null,
+  val isUploaderVerified: Boolean? = null,
+  val streamPosition: Long? = null
 )
  {
   companion object {
@@ -462,7 +483,10 @@ data class CommentDto (
       val hearted = pigeonVar_list[7] as Boolean?
       val pinned = pigeonVar_list[8] as Boolean?
       val replyCount = pigeonVar_list[9] as Long?
-      return CommentDto(author, commentText, uploadDate, uploaderAvatars, uploaderUrl, commentId, likeCount, hearted, pinned, replyCount)
+      val isChannelOwner = pigeonVar_list[10] as Boolean?
+      val isUploaderVerified = pigeonVar_list[11] as Boolean?
+      val streamPosition = pigeonVar_list[12] as Long?
+      return CommentDto(author, commentText, uploadDate, uploaderAvatars, uploaderUrl, commentId, likeCount, hearted, pinned, replyCount, isChannelOwner, isUploaderVerified, streamPosition)
     }
   }
   fun toList(): List<Any?> {
@@ -477,6 +501,9 @@ data class CommentDto (
       hearted,
       pinned,
       replyCount,
+      isChannelOwner,
+      isUploaderVerified,
+      streamPosition,
     )
   }
 }
@@ -1205,6 +1232,7 @@ interface PlaylistApi {
 interface CommentsApi {
   fun getComments(url: String, callback: (Result<CommentsPageDto>) -> Unit)
   fun getNextCommentsPage(callback: (Result<CommentsPageDto>) -> Unit)
+  fun getCommentReplies(commentIndex: Long, callback: (Result<CommentsPageDto>) -> Unit)
 
   companion object {
     /** The codec used by CommentsApi. */
@@ -1253,12 +1281,34 @@ interface CommentsApi {
           channel.setMessageHandler(null)
         }
       }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.newpipeextractor_dart.CommentsApi.getCommentReplies$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val commentIndexArg = args[0] as Long
+            api.getCommentReplies(commentIndexArg) { result: Result<CommentsPageDto> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
     }
   }
 }
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface TrendingApi {
   fun getTrendingVideos(callback: (Result<List<StreamInfoItemDto?>>) -> Unit)
+  fun listKiosks(callback: (Result<List<String?>>) -> Unit)
+  fun getKioskContent(kioskId: String, callback: (Result<List<StreamInfoItemDto?>>) -> Unit)
 
   companion object {
     /** The codec used by TrendingApi. */
@@ -1287,6 +1337,44 @@ interface TrendingApi {
           channel.setMessageHandler(null)
         }
       }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.newpipeextractor_dart.TrendingApi.listKiosks$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.listKiosks{ result: Result<List<String?>> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.newpipeextractor_dart.TrendingApi.getKioskContent$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val kioskIdArg = args[0] as String
+            api.getKioskContent(kioskIdArg) { result: Result<List<StreamInfoItemDto?>> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
     }
   }
 }
@@ -1295,6 +1383,9 @@ interface UrlApi {
   fun getIdFromStreamUrl(url: String, callback: (Result<String?>) -> Unit)
   fun getIdFromPlaylistUrl(url: String, callback: (Result<String?>) -> Unit)
   fun getIdFromChannelUrl(url: String, callback: (Result<String?>) -> Unit)
+  fun isValidStreamUrl(url: String, callback: (Result<Boolean>) -> Unit)
+  fun isValidPlaylistUrl(url: String, callback: (Result<Boolean>) -> Unit)
+  fun isValidChannelUrl(url: String, callback: (Result<Boolean>) -> Unit)
 
   companion object {
     /** The codec used by UrlApi. */
@@ -1352,6 +1443,66 @@ interface UrlApi {
             val args = message as List<Any?>
             val urlArg = args[0] as String
             api.getIdFromChannelUrl(urlArg) { result: Result<String?> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.newpipeextractor_dart.UrlApi.isValidStreamUrl$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val urlArg = args[0] as String
+            api.isValidStreamUrl(urlArg) { result: Result<Boolean> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.newpipeextractor_dart.UrlApi.isValidPlaylistUrl$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val urlArg = args[0] as String
+            api.isValidPlaylistUrl(urlArg) { result: Result<Boolean> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.newpipeextractor_dart.UrlApi.isValidChannelUrl$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val urlArg = args[0] as String
+            api.isValidChannelUrl(urlArg) { result: Result<Boolean> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(wrapError(error))
@@ -1435,6 +1586,42 @@ interface CookieApi {
               } else {
                 val data = result.getOrNull()
                 reply.reply(wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+    }
+  }
+}
+/** Generated interface from Pigeon that represents a handler of messages from Flutter. */
+interface LocalizationApi {
+  fun setLocalization(languageCode: String, countryCode: String, callback: (Result<Unit>) -> Unit)
+
+  companion object {
+    /** The codec used by LocalizationApi. */
+    val codec: MessageCodec<Any?> by lazy {
+      ExtractorApiPigeonCodec()
+    }
+    /** Sets up an instance of `LocalizationApi` to handle messages through the `binaryMessenger`. */
+    @JvmOverloads
+    fun setUp(binaryMessenger: BinaryMessenger, api: LocalizationApi?, messageChannelSuffix: String = "") {
+      val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.newpipeextractor_dart.LocalizationApi.setLocalization$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val languageCodeArg = args[0] as String
+            val countryCodeArg = args[1] as String
+            api.setLocalization(languageCodeArg, countryCodeArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(wrapError(error))
+              } else {
+                reply.reply(wrapResult(null))
               }
             }
           }

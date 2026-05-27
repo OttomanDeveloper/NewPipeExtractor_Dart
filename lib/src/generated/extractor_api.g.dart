@@ -39,6 +39,12 @@ class VideoInfoDto {
     this.isShort,
     this.isUploaderVerified,
     this.privacy,
+    this.uploaderSubscriberCount,
+    this.subChannelName,
+    this.subChannelUrl,
+    this.subChannelAvatars,
+    this.licence,
+    this.supportInfo,
   });
 
   String? id;
@@ -85,6 +91,18 @@ class VideoInfoDto {
 
   String? privacy;
 
+  int? uploaderSubscriberCount;
+
+  String? subChannelName;
+
+  String? subChannelUrl;
+
+  List<String?>? subChannelAvatars;
+
+  String? licence;
+
+  String? supportInfo;
+
   Object encode() {
     return <Object?>[
       id,
@@ -109,6 +127,12 @@ class VideoInfoDto {
       isShort,
       isUploaderVerified,
       privacy,
+      uploaderSubscriberCount,
+      subChannelName,
+      subChannelUrl,
+      subChannelAvatars,
+      licence,
+      supportInfo,
     ];
   }
 
@@ -137,6 +161,12 @@ class VideoInfoDto {
       isShort: result[19] as bool?,
       isUploaderVerified: result[20] as bool?,
       privacy: result[21] as String?,
+      uploaderSubscriberCount: result[22] as int?,
+      subChannelName: result[23] as String?,
+      subChannelUrl: result[24] as String?,
+      subChannelAvatars: (result[25] as List<Object?>?)?.cast<String?>(),
+      licence: result[26] as String?,
+      supportInfo: result[27] as String?,
     );
   }
 }
@@ -596,6 +626,9 @@ class CommentDto {
     this.hearted,
     this.pinned,
     this.replyCount,
+    this.isChannelOwner,
+    this.isUploaderVerified,
+    this.streamPosition,
   });
 
   String? author;
@@ -618,6 +651,12 @@ class CommentDto {
 
   int? replyCount;
 
+  bool? isChannelOwner;
+
+  bool? isUploaderVerified;
+
+  int? streamPosition;
+
   Object encode() {
     return <Object?>[
       author,
@@ -630,6 +669,9 @@ class CommentDto {
       hearted,
       pinned,
       replyCount,
+      isChannelOwner,
+      isUploaderVerified,
+      streamPosition,
     ];
   }
 
@@ -646,6 +688,9 @@ class CommentDto {
       hearted: result[7] as bool?,
       pinned: result[8] as bool?,
       replyCount: result[9] as int?,
+      isChannelOwner: result[10] as bool?,
+      isUploaderVerified: result[11] as bool?,
+      streamPosition: result[12] as int?,
     );
   }
 }
@@ -1534,6 +1579,33 @@ class CommentsApi {
       return (pigeonVar_replyList[0] as CommentsPageDto?)!;
     }
   }
+
+  Future<CommentsPageDto> getCommentReplies(int commentIndex) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.newpipeextractor_dart.CommentsApi.getCommentReplies$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_channel.send(<Object?>[commentIndex]) as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else if (pigeonVar_replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (pigeonVar_replyList[0] as CommentsPageDto?)!;
+    }
+  }
 }
 
 class TrendingApi {
@@ -1558,6 +1630,60 @@ class TrendingApi {
     );
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_channel.send(null) as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else if (pigeonVar_replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (pigeonVar_replyList[0] as List<Object?>?)!.cast<StreamInfoItemDto?>();
+    }
+  }
+
+  Future<List<String?>> listKiosks() async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.newpipeextractor_dart.TrendingApi.listKiosks$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_channel.send(null) as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else if (pigeonVar_replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (pigeonVar_replyList[0] as List<Object?>?)!.cast<String?>();
+    }
+  }
+
+  Future<List<StreamInfoItemDto?>> getKioskContent(String kioskId) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.newpipeextractor_dart.TrendingApi.getKioskContent$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_channel.send(<Object?>[kioskId]) as List<Object?>?;
     if (pigeonVar_replyList == null) {
       throw _createConnectionError(pigeonVar_channelName);
     } else if (pigeonVar_replyList.length > 1) {
@@ -1655,6 +1781,87 @@ class UrlApi {
       return (pigeonVar_replyList[0] as String?);
     }
   }
+
+  Future<bool> isValidStreamUrl(String url) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.newpipeextractor_dart.UrlApi.isValidStreamUrl$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_channel.send(<Object?>[url]) as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else if (pigeonVar_replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (pigeonVar_replyList[0] as bool?)!;
+    }
+  }
+
+  Future<bool> isValidPlaylistUrl(String url) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.newpipeextractor_dart.UrlApi.isValidPlaylistUrl$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_channel.send(<Object?>[url]) as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else if (pigeonVar_replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (pigeonVar_replyList[0] as bool?)!;
+    }
+  }
+
+  Future<bool> isValidChannelUrl(String url) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.newpipeextractor_dart.UrlApi.isValidChannelUrl$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_channel.send(<Object?>[url]) as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else if (pigeonVar_replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (pigeonVar_replyList[0] as bool?)!;
+    }
+  }
 }
 
 class CookieApi {
@@ -1733,6 +1940,42 @@ class CookieApi {
       );
     } else {
       return (pigeonVar_replyList[0] as String?);
+    }
+  }
+}
+
+class LocalizationApi {
+  /// Constructor for [LocalizationApi].  The [binaryMessenger] named argument is
+  /// available for dependency injection.  If it is left null, the default
+  /// BinaryMessenger will be used which routes to the host platform.
+  LocalizationApi({BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
+      : pigeonVar_binaryMessenger = binaryMessenger,
+        pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  final BinaryMessenger? pigeonVar_binaryMessenger;
+
+  static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
+
+  final String pigeonVar_messageChannelSuffix;
+
+  Future<void> setLocalization(String languageCode, String countryCode) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.newpipeextractor_dart.LocalizationApi.setLocalization$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_channel.send(<Object?>[languageCode, countryCode]) as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
     }
   }
 }

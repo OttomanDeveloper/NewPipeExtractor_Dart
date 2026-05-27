@@ -50,6 +50,7 @@ class NewpipeextractorDartPlugin : FlutterPlugin {
         TrendingApi.setUp(messenger, TrendingApiImpl(executor, handler))
         UrlApi.setUp(messenger, UrlApiImpl(executor, handler))
         CookieApi.setUp(messenger, CookieApiImpl(executor, handler, context))
+        LocalizationApi.setUp(messenger, LocalizationApiImpl(executor, handler))
     }
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
@@ -62,5 +63,6 @@ class NewpipeextractorDartPlugin : FlutterPlugin {
         TrendingApi.setUp(messenger, null)
         UrlApi.setUp(messenger, null)
         CookieApi.setUp(messenger, null)
+        LocalizationApi.setUp(messenger, null)
     }
 }

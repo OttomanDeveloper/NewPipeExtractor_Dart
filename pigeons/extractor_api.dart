@@ -33,6 +33,12 @@ class VideoInfoDto {
   bool? isShort;
   bool? isUploaderVerified;
   String? privacy;
+  int? uploaderSubscriberCount;
+  String? subChannelName;
+  String? subChannelUrl;
+  List<String?>? subChannelAvatars;
+  String? licence;
+  String? supportInfo;
 }
 
 class AudioStreamDto {
@@ -133,6 +139,9 @@ class CommentDto {
   bool? hearted;
   bool? pinned;
   int? replyCount;
+  bool? isChannelOwner;
+  bool? isUploaderVerified;
+  int? streamPosition;
 }
 
 class CommentsPageDto {
@@ -246,12 +255,21 @@ abstract class CommentsApi {
 
   @async
   CommentsPageDto getNextCommentsPage();
+
+  @async
+  CommentsPageDto getCommentReplies(int commentIndex);
 }
 
 @HostApi()
 abstract class TrendingApi {
   @async
   List<StreamInfoItemDto?> getTrendingVideos();
+
+  @async
+  List<String?> listKiosks();
+
+  @async
+  List<StreamInfoItemDto?> getKioskContent(String kioskId);
 }
 
 @HostApi()
@@ -264,6 +282,15 @@ abstract class UrlApi {
 
   @async
   String? getIdFromChannelUrl(String url);
+
+  @async
+  bool isValidStreamUrl(String url);
+
+  @async
+  bool isValidPlaylistUrl(String url);
+
+  @async
+  bool isValidChannelUrl(String url);
 }
 
 @HostApi()
@@ -276,4 +303,10 @@ abstract class CookieApi {
 
   @async
   String? decodeCookie(String cookie);
+}
+
+@HostApi()
+abstract class LocalizationApi {
+  @async
+  void setLocalization(String languageCode, String countryCode);
 }

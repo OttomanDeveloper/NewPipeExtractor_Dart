@@ -27,4 +27,29 @@ class TrendingApiImpl(
             }
         }
     }
+
+    override fun listKiosks(callback: (Result<List<String?>>) -> Unit) {
+        executor.execute {
+            try {
+                val kiosks = YouTube.kioskList.availableKiosks
+                handler.post { callback(Result.success(kiosks.toList())) }
+            } catch (e: Exception) {
+                handler.post { callback(Result.failure(e)) }
+            }
+        }
+    }
+
+    override fun getKioskContent(kioskId: String, callback: (Result<List<StreamInfoItemDto?>>) -> Unit) {
+        executor.execute {
+            try {
+                val extractor = YouTube.kioskList.getExtractorById(kioskId, null)
+                extractor.forceLocalization(Localization.fromLocale(Locale.getDefault()))
+                extractor.fetchPage()
+                val items = extractor.initialPage.items.map { mapStreamInfoItem(it) }
+                handler.post { callback(Result.success(items)) }
+            } catch (e: Exception) {
+                handler.post { callback(Result.failure(e)) }
+            }
+        }
+    }
 }
