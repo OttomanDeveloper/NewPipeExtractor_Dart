@@ -103,7 +103,8 @@ object ExtractorHelper {
             },
             duration = tryOrNull { item.duration },
             viewCount = tryOrNull { item.viewCount },
-            isShort = tryOrNull { item.isShortFormContent }
+            isShort = tryOrNull { item.isShortFormContent },
+            thumbnails = tryOrNull { imagesToList(item.thumbnails) }
         )
     }
 

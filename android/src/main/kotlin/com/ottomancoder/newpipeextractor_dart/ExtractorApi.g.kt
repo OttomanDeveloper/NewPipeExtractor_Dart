@@ -259,7 +259,8 @@ data class StreamInfoItemDto (
   val date: String? = null,
   val duration: Long? = null,
   val viewCount: Long? = null,
-  val isShort: Boolean? = null
+  val isShort: Boolean? = null,
+  val thumbnails: List<String?>? = null
 )
  {
   companion object {
@@ -275,7 +276,8 @@ data class StreamInfoItemDto (
       val duration = pigeonVar_list[8] as Long?
       val viewCount = pigeonVar_list[9] as Long?
       val isShort = pigeonVar_list[10] as Boolean?
-      return StreamInfoItemDto(url, id, name, uploaderName, uploaderUrl, uploaderAvatars, uploadDate, date, duration, viewCount, isShort)
+      val thumbnails = pigeonVar_list[11] as List<String?>?
+      return StreamInfoItemDto(url, id, name, uploaderName, uploaderUrl, uploaderAvatars, uploadDate, date, duration, viewCount, isShort, thumbnails)
     }
   }
   fun toList(): List<Any?> {
@@ -291,6 +293,7 @@ data class StreamInfoItemDto (
       duration,
       viewCount,
       isShort,
+      thumbnails,
     )
   }
 }

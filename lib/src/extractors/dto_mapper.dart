@@ -79,6 +79,7 @@ StreamInfoItem mapStreamInfoItem(StreamInfoItemDto d) => StreamInfoItem(
   uploadDate: d.uploadDate, date: d.date,
   duration: d.duration, viewCount: d.viewCount,
   isShort: d.isShort ?? false,
+  thumbnails: d.thumbnails?.whereType<String>().toList() ?? [],
 );
 
 ChannelInfoItem mapChannelInfoItem(ChannelInfoItemDto d) => ChannelInfoItem(

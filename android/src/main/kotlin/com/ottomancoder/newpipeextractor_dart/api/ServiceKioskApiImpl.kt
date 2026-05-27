@@ -19,7 +19,7 @@ class ServiceKioskApiImpl(
                 val kiosks = service.kioskList.availableKiosks
                 handler.post { callback(Result.success(kiosks)) }
             } catch (e: Exception) {
-                handler.post { callback(Result.success(emptyList())) }
+                handler.post { callback(Result.failure(e)) }
             }
         }
     }

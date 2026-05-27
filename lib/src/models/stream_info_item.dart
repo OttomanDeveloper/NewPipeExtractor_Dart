@@ -16,6 +16,7 @@ class StreamInfoItem with _$StreamInfoItem {
     int? duration,
     int? viewCount,
     @Default(false) bool isShort,
+    @Default([]) List<String> thumbnails,
   }) = _StreamInfoItem;
 
   factory StreamInfoItem.fromJson(Map<String, dynamic> json) =>

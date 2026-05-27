@@ -36,7 +36,7 @@ class ServiceStreamApiImpl(
                     videoOnlyStreams = extractor.videoOnlyStreams.map { ExtractorHelper.mapVideoStream(it) },
                     videoStreams = extractor.videoStreams.map { ExtractorHelper.mapVideoStream(it) },
                     subtitleStreams = try {
-                        extractor.subtitlesDefault.map { ExtractorHelper.mapSubtitleStream(it) }
+                        extractor.subtitlesStreams.map { ExtractorHelper.mapSubtitleStream(it) }
                     } catch (_: Exception) { emptyList() },
                     segments = extractor.streamSegments.map { ExtractorHelper.mapSegment(it) },
                     framesets = try {

@@ -55,7 +55,7 @@ class ServiceSearchApiImpl(
                 val suggestions = service.suggestionExtractor.suggestionList(query)
                 handler.post { callback(Result.success(suggestions)) }
             } catch (e: Exception) {
-                handler.post { callback(Result.success(emptyList())) }
+                handler.post { callback(Result.failure(e)) }
             }
         }
     }

@@ -5,6 +5,7 @@ import com.ottomancoder.newpipeextractor_dart.*
 import org.schabi.newpipe.extractor.ListExtractor
 import org.schabi.newpipe.extractor.NewPipe
 import org.schabi.newpipe.extractor.channel.ChannelExtractor
+import org.schabi.newpipe.extractor.feed.FeedExtractor
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 import java.util.concurrent.ExecutorService
 
@@ -15,6 +16,8 @@ class ServiceChannelApiImpl(
 
     private val extractors = mutableMapOf<Long, ChannelExtractor>()
     private val pages = mutableMapOf<Long, ListExtractor.InfoItemsPage<StreamInfoItem>>()
+    private val feedExtractors = mutableMapOf<Long, FeedExtractor>()
+    private val feedPages = mutableMapOf<Long, ListExtractor.InfoItemsPage<StreamInfoItem>>()
 
     override fun getChannelInfo(serviceId: Long, url: String, callback: (Result<ChannelDto>) -> Unit) {
         executor.execute {
@@ -49,6 +52,8 @@ class ServiceChannelApiImpl(
                 val feedExt = service.getFeedExtractor(url)
                 feedExt.fetchPage()
                 val page = feedExt.initialPage
+                feedExtractors[serviceId] = feedExt
+                feedPages[serviceId] = page
                 val items = page.items.map { ExtractorHelper.mapStreamInfoItem(it) }
                 handler.post { callback(Result.success(items)) }
             } catch (e: Exception) {
@@ -59,9 +64,20 @@ class ServiceChannelApiImpl(
 
     override fun getChannelContentNextPage(serviceId: Long, callback: (Result<List<StreamInfoItemDto?>>) -> Unit) {
         executor.execute {
-            // Generic channel content pagination is limited without storing feed extractor state
-            // Return empty for now — use YouTube-specific ChannelApi for full pagination
-            handler.post { callback(Result.success(emptyList())) }
+            try {
+                val feedExt = feedExtractors[serviceId]
+                val page = feedPages[serviceId]
+                if (feedExt != null && page?.hasNextPage() == true) {
+                    val nextPage = feedExt.getPage(page.nextPage)
+                    feedPages[serviceId] = nextPage
+                    val items = nextPage.items.map { ExtractorHelper.mapStreamInfoItem(it) }
+                    handler.post { callback(Result.success(items)) }
+                } else {
+                    handler.post { callback(Result.success(emptyList())) }
+                }
+            } catch (e: Exception) {
+                handler.post { callback(Result.failure(e)) }
+            }
         }
     }
 }

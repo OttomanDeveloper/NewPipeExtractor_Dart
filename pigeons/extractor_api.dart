@@ -81,6 +81,7 @@ class StreamInfoItemDto {
   int? duration;
   int? viewCount;
   bool? isShort;
+  List<String?>? thumbnails;
 }
 
 class ChannelInfoItemDto {

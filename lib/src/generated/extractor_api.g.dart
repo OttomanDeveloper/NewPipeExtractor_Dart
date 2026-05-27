@@ -327,6 +327,7 @@ class StreamInfoItemDto {
     this.duration,
     this.viewCount,
     this.isShort,
+    this.thumbnails,
   });
 
   String? url;
@@ -351,6 +352,8 @@ class StreamInfoItemDto {
 
   bool? isShort;
 
+  List<String?>? thumbnails;
+
   Object encode() {
     return <Object?>[
       url,
@@ -364,6 +367,7 @@ class StreamInfoItemDto {
       duration,
       viewCount,
       isShort,
+      thumbnails,
     ];
   }
 
@@ -381,6 +385,7 @@ class StreamInfoItemDto {
       duration: result[8] as int?,
       viewCount: result[9] as int?,
       isShort: result[10] as bool?,
+      thumbnails: (result[11] as List<Object?>?)?.cast<String?>(),
     );
   }
 }
