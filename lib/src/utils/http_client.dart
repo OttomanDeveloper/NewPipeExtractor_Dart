@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'package:http/http.dart' as http;
-import 'package:newpipeextractor_dart/exceptions/fatalFailureException.dart';
-import 'package:newpipeextractor_dart/exceptions/requestLimitExceededException.dart';
-import 'package:newpipeextractor_dart/exceptions/transientFailureException.dart';
+import 'package:newpipeextractor_dart/src/exceptions/extractor_exception.dart';
 
 class ExtractorHttpClient {
 
@@ -64,19 +62,27 @@ class ExtractorHttpClient {
     var request = response.request!;
     if (request.url.host.endsWith('.google.com') &&
         request.url.path.startsWith('/sorry/')) {
-      throw RequestLimitExceededException.httpRequest(response);
+      throw RequestLimitExceededException(
+        'Rate limited by YouTube. Request: ${response.request}, Response: $response',
+      );
     }
 
     if (statusCode >= 500) {
-      throw TransientFailureException.httpRequest(response);
+      throw TransientFailureException(
+        'Transient HTTP failure. Request: ${response.request}, Response: $response',
+      );
     }
 
     if (statusCode == 429) {
-      throw RequestLimitExceededException.httpRequest(response);
+      throw RequestLimitExceededException(
+        'Rate limited by YouTube (429). Request: ${response.request}, Response: $response',
+      );
     }
 
     if (statusCode >= 400) {
-      throw FatalFailureException.httpRequest(response);
+      throw FatalFailureException(
+        'Fatal HTTP failure ($statusCode). Request: ${response.request}, Response: $response',
+      );
     }
   }
 
