@@ -51,6 +51,12 @@ class NewpipeextractorDartPlugin : FlutterPlugin {
         UrlApi.setUp(messenger, UrlApiImpl(executor, handler))
         CookieApi.setUp(messenger, CookieApiImpl(executor, handler, context))
         LocalizationApi.setUp(messenger, LocalizationApiImpl(executor, handler))
+        ServiceApi.setUp(messenger, ServiceApiImpl(executor, handler))
+        ServiceStreamApi.setUp(messenger, ServiceStreamApiImpl(executor, handler))
+        ServiceSearchApi.setUp(messenger, ServiceSearchApiImpl(executor, handler))
+        ServiceChannelApi.setUp(messenger, ServiceChannelApiImpl(executor, handler))
+        ServicePlaylistApi.setUp(messenger, ServicePlaylistApiImpl(executor, handler))
+        ServiceKioskApi.setUp(messenger, ServiceKioskApiImpl(executor, handler))
     }
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
@@ -64,5 +70,11 @@ class NewpipeextractorDartPlugin : FlutterPlugin {
         UrlApi.setUp(messenger, null)
         CookieApi.setUp(messenger, null)
         LocalizationApi.setUp(messenger, null)
+        ServiceApi.setUp(messenger, null)
+        ServiceStreamApi.setUp(messenger, null)
+        ServiceSearchApi.setUp(messenger, null)
+        ServiceChannelApi.setUp(messenger, null)
+        ServicePlaylistApi.setUp(messenger, null)
+        ServiceKioskApi.setUp(messenger, null)
     }
 }

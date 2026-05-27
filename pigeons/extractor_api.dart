@@ -310,3 +310,76 @@ abstract class LocalizationApi {
   @async
   void setLocalization(String languageCode, String countryCode);
 }
+
+// ─── Multi-Service DTOs ─────────────────────────────────
+
+class ServiceInfoDto {
+  int? serviceId;
+  String? name;
+  String? baseUrl;
+}
+
+// ─── Multi-Service APIs ─────────────────────────────────
+
+@HostApi()
+abstract class ServiceApi {
+  @async
+  List<ServiceInfoDto?> getAvailableServices();
+}
+
+@HostApi()
+abstract class ServiceStreamApi {
+  @async
+  VideoInfoDto getStreamInfo(int serviceId, String url);
+
+  @async
+  StreamsDto getStreams(int serviceId, String url);
+
+  @async
+  SearchResultDto getRelatedItems(int serviceId, String url);
+}
+
+@HostApi()
+abstract class ServiceSearchApi {
+  @async
+  SearchResultDto search(int serviceId, String query, List<String?> filters);
+
+  @async
+  SearchResultDto searchNextPage(int serviceId);
+
+  @async
+  List<String?> getSuggestions(int serviceId, String query);
+}
+
+@HostApi()
+abstract class ServiceChannelApi {
+  @async
+  ChannelDto getChannelInfo(int serviceId, String url);
+
+  @async
+  List<StreamInfoItemDto?> getChannelContent(int serviceId, String url);
+
+  @async
+  List<StreamInfoItemDto?> getChannelContentNextPage(int serviceId);
+}
+
+@HostApi()
+abstract class ServicePlaylistApi {
+  @async
+  PlaylistDto getPlaylistInfo(int serviceId, String url);
+
+  @async
+  List<StreamInfoItemDto?> getPlaylistContent(int serviceId, String url);
+
+  @async
+  List<StreamInfoItemDto?> getPlaylistContentNextPage(int serviceId);
+}
+
+@HostApi()
+abstract class ServiceKioskApi {
+  @async
+  List<String?> listServiceKiosks(int serviceId);
+
+  @async
+  List<StreamInfoItemDto?> getServiceKioskContent(int serviceId, String kioskId);
+}
