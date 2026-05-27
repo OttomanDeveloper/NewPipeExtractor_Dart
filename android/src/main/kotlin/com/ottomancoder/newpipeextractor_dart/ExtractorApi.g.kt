@@ -645,20 +645,26 @@ data class SearchResultDto (
 
 /** Generated class from Pigeon that represents data sent in messages. */
 data class TabPageDto (
-  val items: List<StreamInfoItemDto?>? = null,
+  val streamItems: List<StreamInfoItemDto?>? = null,
+  val playlistItems: List<PlaylistInfoItemDto?>? = null,
+  val channelItems: List<ChannelInfoItemDto?>? = null,
   val hasNextPage: Boolean? = null
 )
  {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): TabPageDto {
-      val items = pigeonVar_list[0] as List<StreamInfoItemDto?>?
-      val hasNextPage = pigeonVar_list[1] as Boolean?
-      return TabPageDto(items, hasNextPage)
+      val streamItems = pigeonVar_list[0] as List<StreamInfoItemDto?>?
+      val playlistItems = pigeonVar_list[1] as List<PlaylistInfoItemDto?>?
+      val channelItems = pigeonVar_list[2] as List<ChannelInfoItemDto?>?
+      val hasNextPage = pigeonVar_list[3] as Boolean?
+      return TabPageDto(streamItems, playlistItems, channelItems, hasNextPage)
     }
   }
   fun toList(): List<Any?> {
     return listOf(
-      items,
+      streamItems,
+      playlistItems,
+      channelItems,
       hasNextPage,
     )
   }

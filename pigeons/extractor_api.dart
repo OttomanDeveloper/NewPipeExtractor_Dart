@@ -180,7 +180,9 @@ class SearchResultDto {
 }
 
 class TabPageDto {
-  List<StreamInfoItemDto?>? items;
+  List<StreamInfoItemDto?>? streamItems;
+  List<PlaylistInfoItemDto?>? playlistItems;
+  List<ChannelInfoItemDto?>? channelItems;
   bool? hasNextPage;
 }
 

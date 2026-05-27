@@ -16,6 +16,9 @@ class CommentsExtractor {
     return m.mapCommentsPage(dto);
   }
 
+  /// Returns replies for a comment by its cumulative index across all fetched pages.
+  /// Index 0 is the first comment from [getComments], and indices continue
+  /// incrementally through subsequent [getNextCommentsPage] calls.
   static Future<CommentsPage> getCommentReplies(int commentIndex) async {
     final dto = await withReCaptchaRetry(() => _api.getCommentReplies(commentIndex));
     return m.mapCommentsPage(dto);

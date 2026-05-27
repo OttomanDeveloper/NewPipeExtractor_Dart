@@ -1,5 +1,7 @@
 import 'package:newpipeextractor_dart/src/generated/extractor_api.g.dart';
 import 'package:newpipeextractor_dart/src/extractors/dto_mapper.dart' as m;
+import 'package:newpipeextractor_dart/src/models/channel_info_item.dart';
+import 'package:newpipeextractor_dart/src/models/playlist_info_item.dart';
 import 'package:newpipeextractor_dart/src/models/youtube_channel.dart';
 import 'package:newpipeextractor_dart/src/models/stream_info_item.dart';
 import 'package:newpipeextractor_dart/src/utils/recaptcha_helper.dart';
@@ -22,20 +24,24 @@ class ChannelExtractor {
     return dtos.whereType<StreamInfoItemDto>().map(m.mapStreamInfoItem).toList();
   }
 
-  static Future<({List<StreamInfoItem> items, bool hasNextPage})> getChannelTabContent(
+  static Future<({List<StreamInfoItem> streams, List<PlaylistInfoItem> playlists, List<ChannelInfoItem> channels, bool hasNextPage})> getChannelTabContent(
     String url, String tabFilter,
   ) async {
     final dto = await withReCaptchaRetry(() => _api.getChannelTabContent(url, tabFilter));
     return (
-      items: dto.items?.whereType<StreamInfoItemDto>().map(m.mapStreamInfoItem).toList() ?? [],
+      streams: dto.streamItems?.whereType<StreamInfoItemDto>().map(m.mapStreamInfoItem).toList() ?? [],
+      playlists: dto.playlistItems?.whereType<PlaylistInfoItemDto>().map(m.mapPlaylistInfoItem).toList() ?? [],
+      channels: dto.channelItems?.whereType<ChannelInfoItemDto>().map(m.mapChannelInfoItem).toList() ?? [],
       hasNextPage: dto.hasNextPage ?? false,
     );
   }
 
-  static Future<({List<StreamInfoItem> items, bool hasNextPage})> getChannelTabNextPage() async {
+  static Future<({List<StreamInfoItem> streams, List<PlaylistInfoItem> playlists, List<ChannelInfoItem> channels, bool hasNextPage})> getChannelTabNextPage() async {
     final dto = await withReCaptchaRetry(() => _api.getChannelTabNextPage());
     return (
-      items: dto.items?.whereType<StreamInfoItemDto>().map(m.mapStreamInfoItem).toList() ?? [],
+      streams: dto.streamItems?.whereType<StreamInfoItemDto>().map(m.mapStreamInfoItem).toList() ?? [],
+      playlists: dto.playlistItems?.whereType<PlaylistInfoItemDto>().map(m.mapPlaylistInfoItem).toList() ?? [],
+      channels: dto.channelItems?.whereType<ChannelInfoItemDto>().map(m.mapChannelInfoItem).toList() ?? [],
       hasNextPage: dto.hasNextPage ?? false,
     );
   }

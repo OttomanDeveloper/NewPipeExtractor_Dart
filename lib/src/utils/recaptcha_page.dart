@@ -17,7 +17,7 @@ class _ReCaptchaPageState extends State<ReCaptchaPage> {
 
   @override
   Widget build(BuildContext context) {
-    final url = ModalRoute.of(context)!.settings.arguments as String;
+    final url = ModalRoute.of(context)?.settings.arguments as String? ?? '';
     return Material(
       child: Scaffold(
         appBar: AppBar(

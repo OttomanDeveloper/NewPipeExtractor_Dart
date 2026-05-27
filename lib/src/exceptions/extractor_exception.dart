@@ -35,6 +35,10 @@ class RequestLimitExceededException extends ExtractorException {
   RequestLimitExceededException(this.message);
 }
 
+/// Thrown when YouTube requires CAPTCHA verification.
+/// In practice, reCAPTCHA challenges are handled automatically via
+/// [setReCaptchaNavigator]. This exception is available for consumers
+/// who need to handle reCAPTCHA in custom ways.
 class ReCaptchaRequiredException extends ExtractorException {
   @override
   final String message;

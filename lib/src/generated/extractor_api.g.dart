@@ -877,17 +877,25 @@ class SearchResultDto {
 
 class TabPageDto {
   TabPageDto({
-    this.items,
+    this.streamItems,
+    this.playlistItems,
+    this.channelItems,
     this.hasNextPage,
   });
 
-  List<StreamInfoItemDto?>? items;
+  List<StreamInfoItemDto?>? streamItems;
+
+  List<PlaylistInfoItemDto?>? playlistItems;
+
+  List<ChannelInfoItemDto?>? channelItems;
 
   bool? hasNextPage;
 
   Object encode() {
     return <Object?>[
-      items,
+      streamItems,
+      playlistItems,
+      channelItems,
       hasNextPage,
     ];
   }
@@ -895,8 +903,10 @@ class TabPageDto {
   static TabPageDto decode(Object result) {
     result as List<Object?>;
     return TabPageDto(
-      items: (result[0] as List<Object?>?)?.cast<StreamInfoItemDto?>(),
-      hasNextPage: result[1] as bool?,
+      streamItems: (result[0] as List<Object?>?)?.cast<StreamInfoItemDto?>(),
+      playlistItems: (result[1] as List<Object?>?)?.cast<PlaylistInfoItemDto?>(),
+      channelItems: (result[2] as List<Object?>?)?.cast<ChannelInfoItemDto?>(),
+      hasNextPage: result[3] as bool?,
     );
   }
 }

@@ -6,11 +6,14 @@ import com.ottomancoder.newpipeextractor_dart.toFlutterResult
 import com.ottomancoder.newpipeextractor_dart.ExtractorHelper.imagesToList
 import com.ottomancoder.newpipeextractor_dart.ExtractorHelper.mapStreamInfoItem
 import com.ottomancoder.newpipeextractor_dart.ExtractorHelper.tryOrNull
+import org.schabi.newpipe.extractor.InfoItem
 import org.schabi.newpipe.extractor.ListExtractor
 import org.schabi.newpipe.extractor.ServiceList.YouTube
 import org.schabi.newpipe.extractor.channel.ChannelExtractor
+import org.schabi.newpipe.extractor.channel.ChannelInfoItem
 import org.schabi.newpipe.extractor.channel.tabs.ChannelTabExtractor
 import org.schabi.newpipe.extractor.feed.FeedExtractor
+import org.schabi.newpipe.extractor.playlist.PlaylistInfoItem
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 import java.util.concurrent.ExecutorService
 
@@ -124,12 +127,22 @@ class ChannelApiImpl(
                 val page = tabExt.initialPage
                 tabPage = page
 
-                @Suppress("UNCHECKED_CAST")
-                val streamItems = (page.items as? List<StreamInfoItem>)?.map { mapStreamInfoItem(it) }
-                    ?: page.items.filterIsInstance<StreamInfoItem>().map { mapStreamInfoItem(it) }
+                val streams = mutableListOf<StreamInfoItemDto>()
+                val playlists = mutableListOf<PlaylistInfoItemDto>()
+                val channels = mutableListOf<ChannelInfoItemDto>()
+                for (item in page.items) {
+                    when (item.infoType) {
+                        InfoItem.InfoType.STREAM -> streams.add(mapStreamInfoItem(item as StreamInfoItem))
+                        InfoItem.InfoType.PLAYLIST -> playlists.add(ExtractorHelper.mapPlaylistInfoItem(item as PlaylistInfoItem))
+                        InfoItem.InfoType.CHANNEL -> channels.add(ExtractorHelper.mapChannelInfoItem(item as ChannelInfoItem))
+                        else -> {}
+                    }
+                }
 
                 val result = TabPageDto(
-                    items = streamItems,
+                    streamItems = streams,
+                    playlistItems = playlists,
+                    channelItems = channels,
                     hasNextPage = page.hasNextPage()
                 )
                 handler.post { callback(Result.success(result)) }
@@ -148,17 +161,27 @@ class ChannelApiImpl(
                     val nextPage = tab.getPage(page.nextPage)
                     tabPage = nextPage
 
-                    @Suppress("UNCHECKED_CAST")
-                    val streamItems = (nextPage.items as? List<StreamInfoItem>)?.map { mapStreamInfoItem(it) }
-                        ?: nextPage.items.filterIsInstance<StreamInfoItem>().map { mapStreamInfoItem(it) }
+                    val streams = mutableListOf<StreamInfoItemDto>()
+                    val playlists = mutableListOf<PlaylistInfoItemDto>()
+                    val channels = mutableListOf<ChannelInfoItemDto>()
+                    for (item in nextPage.items) {
+                        when (item.infoType) {
+                            InfoItem.InfoType.STREAM -> streams.add(mapStreamInfoItem(item as StreamInfoItem))
+                            InfoItem.InfoType.PLAYLIST -> playlists.add(ExtractorHelper.mapPlaylistInfoItem(item as PlaylistInfoItem))
+                            InfoItem.InfoType.CHANNEL -> channels.add(ExtractorHelper.mapChannelInfoItem(item as ChannelInfoItem))
+                            else -> {}
+                        }
+                    }
 
                     val result = TabPageDto(
-                        items = streamItems,
+                        streamItems = streams,
+                        playlistItems = playlists,
+                        channelItems = channels,
                         hasNextPage = nextPage.hasNextPage()
                     )
                     handler.post { callback(Result.success(result)) }
                 } else {
-                    val empty = TabPageDto(items = emptyList(), hasNextPage = false)
+                    val empty = TabPageDto(streamItems = emptyList(), playlistItems = emptyList(), channelItems = emptyList(), hasNextPage = false)
                     handler.post { callback(Result.success(empty)) }
                 }
             } catch (e: Exception) {
