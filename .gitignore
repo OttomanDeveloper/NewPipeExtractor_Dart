@@ -1,7 +1,14 @@
 .DS_Store
 .dart_tool/
-
 .packages
 .pub/
-
 build/
+
+# IDE
+.idea/
+*.iml
+.metadata
+
+# Generated
+*.g.dart
+*.freezed.dart
