@@ -1,8 +1,8 @@
-package com.artxdev.newpipeextractor_dart;
+package com.ottomancoder.newpipeextractor_dart;
 
 import android.os.Build;
 
-import com.artxdev.newpipeextractor_dart.youtube.YoutubeLinkHandler;
+import com.ottomancoder.newpipeextractor_dart.youtube.YoutubeLinkHandler;
 import com.google.gson.Gson;
 
 import org.schabi.newpipe.extractor.Image;

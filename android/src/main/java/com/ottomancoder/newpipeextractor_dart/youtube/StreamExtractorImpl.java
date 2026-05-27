@@ -1,6 +1,6 @@
-package com.artxdev.newpipeextractor_dart.youtube;
+package com.ottomancoder.newpipeextractor_dart.youtube;
 
-import com.artxdev.newpipeextractor_dart.FetchData;
+import com.ottomancoder.newpipeextractor_dart.FetchData;
 
 import org.schabi.newpipe.extractor.InfoItem;
 import org.schabi.newpipe.extractor.InfoItemExtractor;

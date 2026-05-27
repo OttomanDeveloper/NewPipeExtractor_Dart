@@ -1,6 +1,6 @@
-package com.artxdev.newpipeextractor_dart.youtube;
+package com.ottomancoder.newpipeextractor_dart.youtube;
 
-import com.artxdev.newpipeextractor_dart.downloader.DownloaderImpl;
+import com.ottomancoder.newpipeextractor_dart.downloader.DownloaderImpl;
 import com.google.gson.Gson;
 
 import org.schabi.newpipe.extractor.Image;

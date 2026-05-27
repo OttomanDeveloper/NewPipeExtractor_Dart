@@ -1,4 +1,4 @@
-package com.artxdev.newpipeextractor_dart.downloader;
+package com.ottomancoder.newpipeextractor_dart.downloader;
 
 import android.text.TextUtils;
 

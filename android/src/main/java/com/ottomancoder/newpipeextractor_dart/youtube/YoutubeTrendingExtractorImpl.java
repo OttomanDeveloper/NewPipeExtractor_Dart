@@ -1,4 +1,4 @@
-package com.artxdev.newpipeextractor_dart.youtube;
+package com.ottomancoder.newpipeextractor_dart.youtube;
 
 import org.schabi.newpipe.extractor.Image;
 import org.schabi.newpipe.extractor.ListExtractor;
