@@ -1,4 +1,4 @@
-group 'com.artxdev.newpipeextractor_dart'
+group 'com.ottomancoder.newpipeextractor_dart'
 version '1.0'
 
 buildscript {
