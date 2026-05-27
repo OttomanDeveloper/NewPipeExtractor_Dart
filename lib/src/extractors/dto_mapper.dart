@@ -32,6 +32,12 @@ VideoInfo mapVideoInfo(VideoInfoDto d) => VideoInfo(
   isShort: d.isShort ?? false,
   isUploaderVerified: d.isUploaderVerified ?? false,
   privacy: Privacy.fromString(d.privacy),
+  uploaderSubscriberCount: d.uploaderSubscriberCount,
+  subChannelName: d.subChannelName,
+  subChannelUrl: d.subChannelUrl,
+  subChannelAvatars: d.subChannelAvatars?.whereType<String>().toList() ?? [],
+  licence: d.licence,
+  supportInfo: d.supportInfo,
 );
 
 AudioOnlyStream mapAudio(AudioStreamDto d) => AudioOnlyStream(
@@ -127,6 +133,9 @@ YoutubeComment mapComment(CommentDto d) => YoutubeComment(
   uploaderUrl: d.uploaderUrl, commentId: d.commentId,
   likeCount: d.likeCount, hearted: d.hearted ?? false,
   pinned: d.pinned ?? false, replyCount: d.replyCount ?? 0,
+  isChannelOwner: d.isChannelOwner ?? false,
+  isUploaderVerified: d.isUploaderVerified ?? false,
+  streamPosition: d.streamPosition,
 );
 
 CommentsPage mapCommentsPage(CommentsPageDto d) => CommentsPage(

@@ -28,6 +28,12 @@ class VideoInfo with _$VideoInfo {
     @Default(false) bool isShort,
     @Default(false) bool isUploaderVerified,
     @Default(Privacy.other) Privacy privacy,
+    int? uploaderSubscriberCount,
+    String? subChannelName,
+    String? subChannelUrl,
+    @Default([]) List<String> subChannelAvatars,
+    String? licence,
+    String? supportInfo,
   }) = _VideoInfo;
 
   factory VideoInfo.fromJson(Map<String, dynamic> json) =>

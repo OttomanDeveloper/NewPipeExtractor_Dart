@@ -15,4 +15,9 @@ class CommentsExtractor {
     final dto = await withReCaptchaRetry(() => _api.getNextCommentsPage());
     return m.mapCommentsPage(dto);
   }
+
+  static Future<CommentsPage> getCommentReplies(int commentIndex) async {
+    final dto = await withReCaptchaRetry(() => _api.getCommentReplies(commentIndex));
+    return m.mapCommentsPage(dto);
+  }
 }

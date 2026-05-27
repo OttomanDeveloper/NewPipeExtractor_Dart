@@ -29,6 +29,7 @@ export 'src/extractors/playlist_extractor.dart';
 export 'src/extractors/trending_extractor.dart';
 export 'src/extractors/url_extractor.dart';
 export 'src/extractors/cookie_extractor.dart';
+export 'src/extractors/localization_extractor.dart';
 
 // Exceptions
 export 'src/exceptions/extractor_exception.dart';

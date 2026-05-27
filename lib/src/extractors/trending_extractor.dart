@@ -10,4 +10,14 @@ class TrendingExtractor {
     final dtos = await withReCaptchaRetry(() => _api.getTrendingVideos());
     return dtos.whereType<StreamInfoItemDto>().map(m.mapStreamInfoItem).toList();
   }
+
+  static Future<List<String>> listKiosks() async {
+    final result = await withReCaptchaRetry(() => _api.listKiosks());
+    return result.whereType<String>().toList();
+  }
+
+  static Future<List<StreamInfoItem>> getKioskContent(String kioskId) async {
+    final dtos = await withReCaptchaRetry(() => _api.getKioskContent(kioskId));
+    return dtos.whereType<StreamInfoItemDto>().map(m.mapStreamInfoItem).toList();
+  }
 }

@@ -15,6 +15,9 @@ class YoutubeComment with _$YoutubeComment {
     @Default(false) bool hearted,
     @Default(false) bool pinned,
     @Default(0) int replyCount,
+    @Default(false) bool isChannelOwner,
+    @Default(false) bool isUploaderVerified,
+    int? streamPosition,
   }) = _YoutubeComment;
 
   factory YoutubeComment.fromJson(Map<String, dynamic> json) =>
