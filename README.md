@@ -175,8 +175,8 @@ YouTube channel info, uploads, and tab-based browsing (Videos, Shorts, Live, Pla
 | `getChannelInfo(String url)` | `Future<YoutubeChannel>` | Channel metadata with available tabs |
 | `getChannelUploads(String url)` | `Future<List<StreamInfoItem>>` | Channel uploads via feed |
 | `getChannelNextPage()` | `Future<List<StreamInfoItem>>` | Next page of channel uploads |
-| `getChannelTabContent(String url, String tabFilter)` | `Future<({List<StreamInfoItem> items, bool hasNextPage})>` | Content from a specific channel tab |
-| `getChannelTabNextPage()` | `Future<({List<StreamInfoItem> items, bool hasNextPage})>` | Next page of tab content |
+| `getChannelTabContent(String url, String tabFilter)` | `Future<({List<StreamInfoItem> streams, List<PlaylistInfoItem> playlists, List<ChannelInfoItem> channels, bool hasNextPage})>` | Content from a specific channel tab |
+| `getChannelTabNextPage()` | `Future<({List<StreamInfoItem> streams, List<PlaylistInfoItem> playlists, List<ChannelInfoItem> channels, bool hasNextPage})>` | Next page of tab content |
 
 ```dart
 final channel = await ChannelExtractor.getChannelInfo(url);
@@ -185,12 +185,17 @@ print(channel.isVerified);
 print(channel.tabs); // [ChannelTab.videos, ChannelTab.shorts, ChannelTab.live, ...]
 
 // Browse Shorts tab
-final shorts = await ChannelExtractor.getChannelTabContent(
-  url, 'shorts',
-);
-for (final item in shorts.items) {
+final shorts = await ChannelExtractor.getChannelTabContent(url, 'shorts');
+for (final item in shorts.streams) {
   print('${item.name} (${item.isShort})');
 }
+
+// Browse Playlists tab — now returns playlists too
+final playlistsTab = await ChannelExtractor.getChannelTabContent(url, 'playlists');
+for (final pl in playlistsTab.playlists) {
+  print('${pl.name} — ${pl.streamCount} videos');
+}
+
 if (shorts.hasNextPage) {
   final more = await ChannelExtractor.getChannelTabNextPage();
 }
@@ -758,7 +763,7 @@ Low-level HTTP utility for stream downloading.
 |---|---|
 | `defaultHeaders` | Default User-Agent headers |
 | `getContentLength(String url)` | Get the byte size of a stream URL |
-| `getStream(dynamic stream, {...})` | Download a stream as chunks with automatic retry on failure |
+| `getStream({required String url, required int size, Map<String, String>? headers, bool validate, int start, int errorCount})` | Download a stream as chunks with automatic retry on failure |
 
 ---
 
@@ -798,4 +803,4 @@ Low-level HTTP utility for stream downloading.
 
 ## License
 
-MIT License — see [LICENSE](LICENSE) for details.
+BSD 3-Clause License — see [LICENSE](LICENSE) for details.
