@@ -2,6 +2,7 @@ package com.ottomancoder.newpipeextractor_dart.api
 
 import android.os.Handler
 import com.ottomancoder.newpipeextractor_dart.*
+import com.ottomancoder.newpipeextractor_dart.toFlutterResult
 import com.ottomancoder.newpipeextractor_dart.ExtractorHelper.imagesToList
 import com.ottomancoder.newpipeextractor_dart.ExtractorHelper.tryOrNull
 import org.schabi.newpipe.extractor.ListExtractor
@@ -41,7 +42,7 @@ class CommentsApiImpl(
                 )
                 handler.post { callback(Result.success(result)) }
             } catch (e: Exception) {
-                handler.post { callback(Result.failure(e)) }
+                handler.post { callback(e.toFlutterResult()) }
             }
         }
     }
@@ -68,7 +69,7 @@ class CommentsApiImpl(
                     handler.post { callback(Result.success(empty)) }
                 }
             } catch (e: Exception) {
-                handler.post { callback(Result.failure(e)) }
+                handler.post { callback(e.toFlutterResult()) }
             }
         }
     }
@@ -111,7 +112,7 @@ class CommentsApiImpl(
                 )
                 handler.post { callback(Result.success(result)) }
             } catch (e: Exception) {
-                handler.post { callback(Result.failure(e)) }
+                handler.post { callback(e.toFlutterResult()) }
             }
         }
     }

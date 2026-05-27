@@ -2,6 +2,7 @@ package com.ottomancoder.newpipeextractor_dart.api
 
 import android.os.Handler
 import com.ottomancoder.newpipeextractor_dart.*
+import com.ottomancoder.newpipeextractor_dart.toFlutterResult
 import org.schabi.newpipe.extractor.NewPipe
 import org.schabi.newpipe.extractor.localization.Localization
 import java.util.Locale
@@ -19,7 +20,7 @@ class ServiceKioskApiImpl(
                 val kiosks = service.kioskList.availableKiosks
                 handler.post { callback(Result.success(kiosks)) }
             } catch (e: Exception) {
-                handler.post { callback(Result.failure(e)) }
+                handler.post { callback(e.toFlutterResult()) }
             }
         }
     }
@@ -34,7 +35,7 @@ class ServiceKioskApiImpl(
                 val items = extractor.initialPage.items.map { ExtractorHelper.mapStreamInfoItem(it) }
                 handler.post { callback(Result.success(items)) }
             } catch (e: Exception) {
-                handler.post { callback(Result.failure(e)) }
+                handler.post { callback(e.toFlutterResult()) }
             }
         }
     }

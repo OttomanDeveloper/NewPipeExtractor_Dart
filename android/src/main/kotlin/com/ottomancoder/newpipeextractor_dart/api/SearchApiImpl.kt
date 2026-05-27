@@ -2,6 +2,7 @@ package com.ottomancoder.newpipeextractor_dart.api
 
 import android.os.Handler
 import com.ottomancoder.newpipeextractor_dart.*
+import com.ottomancoder.newpipeextractor_dart.toFlutterResult
 import com.ottomancoder.newpipeextractor_dart.ExtractorHelper.categorizeInfoItems
 import org.schabi.newpipe.extractor.InfoItem
 import org.schabi.newpipe.extractor.ListExtractor
@@ -37,7 +38,7 @@ class SearchApiImpl(
                 val result = categorizeInfoItems(page.items)
                 handler.post { callback(Result.success(result)) }
             } catch (e: Exception) {
-                handler.post { callback(Result.failure(e)) }
+                handler.post { callback(e.toFlutterResult()) }
             }
         }
     }
@@ -61,7 +62,7 @@ class SearchApiImpl(
                     handler.post { callback(Result.success(empty)) }
                 }
             } catch (e: Exception) {
-                handler.post { callback(Result.failure(e)) }
+                handler.post { callback(e.toFlutterResult()) }
             }
         }
     }
@@ -83,7 +84,7 @@ class SearchApiImpl(
                 val result = categorizeInfoItems(page.items)
                 handler.post { callback(Result.success(result)) }
             } catch (e: Exception) {
-                handler.post { callback(Result.failure(e)) }
+                handler.post { callback(e.toFlutterResult()) }
             }
         }
     }
@@ -107,7 +108,7 @@ class SearchApiImpl(
                     handler.post { callback(Result.success(empty)) }
                 }
             } catch (e: Exception) {
-                handler.post { callback(Result.failure(e)) }
+                handler.post { callback(e.toFlutterResult()) }
             }
         }
     }
@@ -118,7 +119,7 @@ class SearchApiImpl(
                 val suggestions = YouTube.suggestionExtractor.suggestionList(query)
                 handler.post { callback(Result.success(suggestions)) }
             } catch (e: Exception) {
-                handler.post { callback(Result.failure(e)) }
+                handler.post { callback(e.toFlutterResult()) }
             }
         }
     }

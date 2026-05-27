@@ -31,7 +31,7 @@ class NewpipeextractorDartPlugin : FlutterPlugin {
         NewPipe.init(
             DownloaderImpl.getInstance(),
             Localization.fromLocale(Locale.getDefault()),
-            ContentCountry(Locale.getDefault().country)
+            ContentCountry(Locale.getDefault().country.ifEmpty { "US" })
         )
 
         // Restore saved cookies
@@ -76,5 +76,6 @@ class NewpipeextractorDartPlugin : FlutterPlugin {
         ServiceChannelApi.setUp(messenger, null)
         ServicePlaylistApi.setUp(messenger, null)
         ServiceKioskApi.setUp(messenger, null)
+        executor.shutdown()
     }
 }

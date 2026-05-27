@@ -10,9 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
-import android.util.Log;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -33,7 +32,7 @@ public class DownloaderImpl extends Downloader {
 
     private DownloaderImpl(final OkHttpClient.Builder builder) {
         this.client = builder.readTimeout(30, TimeUnit.SECONDS).build();
-        this.cookies = new HashMap<>();
+        this.cookies = new ConcurrentHashMap<>();
     }
 
     /**
@@ -101,7 +100,6 @@ public class DownloaderImpl extends Downloader {
                 .addHeader("User-Agent", USER_AGENT);
 
         final String cookies = getCookies(url);
-        Log.d("COOKIE", cookies);
         if (!cookies.isEmpty()) {
             requestBuilder.addHeader("Cookie", cookies);
         }

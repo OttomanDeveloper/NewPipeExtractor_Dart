@@ -2,6 +2,7 @@ package com.ottomancoder.newpipeextractor_dart.api
 
 import android.os.Handler
 import com.ottomancoder.newpipeextractor_dart.*
+import com.ottomancoder.newpipeextractor_dart.toFlutterResult
 import org.schabi.newpipe.extractor.ListExtractor
 import org.schabi.newpipe.extractor.NewPipe
 import org.schabi.newpipe.extractor.channel.ChannelExtractor
@@ -27,20 +28,20 @@ class ServiceChannelApiImpl(
                 ext.fetchPage()
                 extractors[serviceId] = ext
                 val dto = ChannelDto(
-                    id = ext.id,
-                    name = ext.name,
-                    url = ext.url,
-                    avatars = ExtractorHelper.imagesToList(ext.avatars),
-                    banners = ExtractorHelper.imagesToList(ext.banners),
-                    description = ext.description,
+                    id = try { ext.id } catch (_: Exception) { null },
+                    name = try { ext.name } catch (_: Exception) { null },
+                    url = try { ext.url } catch (_: Exception) { null },
+                    avatars = try { ExtractorHelper.imagesToList(ext.avatars) } catch (_: Exception) { emptyList() },
+                    banners = try { ExtractorHelper.imagesToList(ext.banners) } catch (_: Exception) { emptyList() },
+                    description = try { ext.description } catch (_: Exception) { null },
                     feedUrl = try { ext.feedUrl } catch (_: Exception) { null },
-                    subscriberCount = ext.subscriberCount,
+                    subscriberCount = try { ext.subscriberCount } catch (_: Exception) { null },
                     isVerified = try { ext.isVerified } catch (_: Exception) { false },
                     tabs = try { ext.tabs.map { it.contentFilters.firstOrNull() ?: "unknown" } } catch (_: Exception) { emptyList() }
                 )
                 handler.post { callback(Result.success(dto)) }
             } catch (e: Exception) {
-                handler.post { callback(Result.failure(e)) }
+                handler.post { callback(e.toFlutterResult()) }
             }
         }
     }
@@ -57,7 +58,7 @@ class ServiceChannelApiImpl(
                 val items = page.items.map { ExtractorHelper.mapStreamInfoItem(it) }
                 handler.post { callback(Result.success(items)) }
             } catch (e: Exception) {
-                handler.post { callback(Result.failure(e)) }
+                handler.post { callback(e.toFlutterResult()) }
             }
         }
     }
@@ -76,7 +77,7 @@ class ServiceChannelApiImpl(
                     handler.post { callback(Result.success(emptyList())) }
                 }
             } catch (e: Exception) {
-                handler.post { callback(Result.failure(e)) }
+                handler.post { callback(e.toFlutterResult()) }
             }
         }
     }

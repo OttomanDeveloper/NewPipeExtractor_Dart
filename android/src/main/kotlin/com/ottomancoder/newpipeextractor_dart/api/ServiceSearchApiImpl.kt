@@ -2,6 +2,7 @@ package com.ottomancoder.newpipeextractor_dart.api
 
 import android.os.Handler
 import com.ottomancoder.newpipeextractor_dart.*
+import com.ottomancoder.newpipeextractor_dart.toFlutterResult
 import org.schabi.newpipe.extractor.InfoItem
 import org.schabi.newpipe.extractor.ListExtractor
 import org.schabi.newpipe.extractor.NewPipe
@@ -26,7 +27,7 @@ class ServiceSearchApiImpl(
                 pages[serviceId] = ext.initialPage
                 handler.post { callback(Result.success(ExtractorHelper.categorizeInfoItems(pages[serviceId]!!.items))) }
             } catch (e: Exception) {
-                handler.post { callback(Result.failure(e)) }
+                handler.post { callback(e.toFlutterResult()) }
             }
         }
     }
@@ -43,7 +44,7 @@ class ServiceSearchApiImpl(
                     handler.post { callback(Result.success(SearchResultDto(videos = emptyList(), playlists = emptyList(), channels = emptyList()))) }
                 }
             } catch (e: Exception) {
-                handler.post { callback(Result.failure(e)) }
+                handler.post { callback(e.toFlutterResult()) }
             }
         }
     }
@@ -55,7 +56,7 @@ class ServiceSearchApiImpl(
                 val suggestions = service.suggestionExtractor.suggestionList(query)
                 handler.post { callback(Result.success(suggestions)) }
             } catch (e: Exception) {
-                handler.post { callback(Result.failure(e)) }
+                handler.post { callback(e.toFlutterResult()) }
             }
         }
     }

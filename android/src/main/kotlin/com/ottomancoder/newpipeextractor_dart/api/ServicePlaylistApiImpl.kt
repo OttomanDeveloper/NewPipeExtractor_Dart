@@ -2,6 +2,7 @@ package com.ottomancoder.newpipeextractor_dart.api
 
 import android.os.Handler
 import com.ottomancoder.newpipeextractor_dart.*
+import com.ottomancoder.newpipeextractor_dart.toFlutterResult
 import org.schabi.newpipe.extractor.ListExtractor
 import org.schabi.newpipe.extractor.NewPipe
 import org.schabi.newpipe.extractor.playlist.PlaylistExtractor
@@ -24,21 +25,21 @@ class ServicePlaylistApiImpl(
                 ext.fetchPage()
                 extractors[serviceId] = ext
                 val dto = PlaylistDto(
-                    id = ext.id,
-                    name = ext.name,
-                    url = ext.url,
-                    uploaderName = try { ext.uploaderName } catch (_: Exception) { "Unknown" },
+                    id = try { ext.id } catch (_: Exception) { null },
+                    name = try { ext.name } catch (_: Exception) { null },
+                    url = try { ext.url } catch (_: Exception) { null },
+                    uploaderName = try { ext.uploaderName } catch (_: Exception) { null },
                     uploaderAvatars = try { ExtractorHelper.imagesToList(ext.uploaderAvatars) } catch (_: Exception) { emptyList() },
                     uploaderUrl = try { ext.uploaderUrl } catch (_: Exception) { null },
-                    banners = ExtractorHelper.imagesToList(ext.banners),
-                    thumbnails = ExtractorHelper.imagesToList(ext.thumbnails),
-                    streamCount = ext.streamCount,
+                    banners = try { ExtractorHelper.imagesToList(ext.banners) } catch (_: Exception) { emptyList() },
+                    thumbnails = try { ExtractorHelper.imagesToList(ext.thumbnails) } catch (_: Exception) { emptyList() },
+                    streamCount = try { ext.streamCount } catch (_: Exception) { null },
                     description = try { ext.description?.content } catch (_: Exception) { null },
                     playlistType = try { ext.playlistType?.name } catch (_: Exception) { null }
                 )
                 handler.post { callback(Result.success(dto)) }
             } catch (e: Exception) {
-                handler.post { callback(Result.failure(e)) }
+                handler.post { callback(e.toFlutterResult()) }
             }
         }
     }
@@ -55,7 +56,7 @@ class ServicePlaylistApiImpl(
                 val items = page.items.map { ExtractorHelper.mapStreamInfoItem(it) }
                 handler.post { callback(Result.success(items)) }
             } catch (e: Exception) {
-                handler.post { callback(Result.failure(e)) }
+                handler.post { callback(e.toFlutterResult()) }
             }
         }
     }
@@ -74,7 +75,7 @@ class ServicePlaylistApiImpl(
                     handler.post { callback(Result.success(emptyList())) }
                 }
             } catch (e: Exception) {
-                handler.post { callback(Result.failure(e)) }
+                handler.post { callback(e.toFlutterResult()) }
             }
         }
     }

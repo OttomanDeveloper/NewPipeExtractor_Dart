@@ -3,6 +3,7 @@ package com.ottomancoder.newpipeextractor_dart
 import org.schabi.newpipe.extractor.Image
 import org.schabi.newpipe.extractor.InfoItem
 import org.schabi.newpipe.extractor.channel.ChannelInfoItem
+import org.schabi.newpipe.extractor.exceptions.ReCaptchaException
 import org.schabi.newpipe.extractor.playlist.PlaylistInfoItem
 import org.schabi.newpipe.extractor.services.youtube.linkHandler.YoutubeChannelLinkHandlerFactory
 import org.schabi.newpipe.extractor.services.youtube.linkHandler.YoutubePlaylistLinkHandlerFactory
@@ -15,6 +16,14 @@ import org.schabi.newpipe.extractor.stream.StreamSegment
 import org.schabi.newpipe.extractor.stream.SubtitlesStream
 import org.schabi.newpipe.extractor.stream.VideoStream
 import java.time.format.DateTimeFormatter
+
+fun Exception.toFlutterResult(): Result<Nothing> {
+    return if (this is ReCaptchaException) {
+        Result.failure(FlutterError("RECAPTCHA", this.message, this.url))
+    } else {
+        Result.failure(this)
+    }
+}
 
 object ExtractorHelper {
 

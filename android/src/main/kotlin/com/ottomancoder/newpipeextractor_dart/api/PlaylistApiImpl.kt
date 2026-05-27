@@ -2,6 +2,7 @@ package com.ottomancoder.newpipeextractor_dart.api
 
 import android.os.Handler
 import com.ottomancoder.newpipeextractor_dart.*
+import com.ottomancoder.newpipeextractor_dart.toFlutterResult
 import com.ottomancoder.newpipeextractor_dart.ExtractorHelper.imagesToList
 import com.ottomancoder.newpipeextractor_dart.ExtractorHelper.mapStreamInfoItem
 import com.ottomancoder.newpipeextractor_dart.ExtractorHelper.tryOrNull
@@ -41,7 +42,7 @@ class PlaylistApiImpl(
                 )
                 handler.post { callback(Result.success(result)) }
             } catch (e: Exception) {
-                handler.post { callback(Result.failure(e)) }
+                handler.post { callback(e.toFlutterResult()) }
             }
         }
     }
@@ -59,7 +60,7 @@ class PlaylistApiImpl(
                 val items = page.items.map { mapStreamInfoItem(it) }
                 handler.post { callback(Result.success(items)) }
             } catch (e: Exception) {
-                handler.post { callback(Result.failure(e)) }
+                handler.post { callback(e.toFlutterResult()) }
             }
         }
     }
@@ -78,7 +79,7 @@ class PlaylistApiImpl(
                     handler.post { callback(Result.success(emptyList())) }
                 }
             } catch (e: Exception) {
-                handler.post { callback(Result.failure(e)) }
+                handler.post { callback(e.toFlutterResult()) }
             }
         }
     }

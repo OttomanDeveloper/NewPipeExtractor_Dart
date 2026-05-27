@@ -2,6 +2,7 @@ package com.ottomancoder.newpipeextractor_dart.api
 
 import android.os.Handler
 import com.ottomancoder.newpipeextractor_dart.*
+import com.ottomancoder.newpipeextractor_dart.toFlutterResult
 import com.ottomancoder.newpipeextractor_dart.ExtractorHelper.mapStreamInfoItem
 import org.schabi.newpipe.extractor.ServiceList.YouTube
 import org.schabi.newpipe.extractor.localization.Localization
@@ -23,7 +24,7 @@ class TrendingApiImpl(
                 val items = page.items.map { mapStreamInfoItem(it) }
                 handler.post { callback(Result.success(items)) }
             } catch (e: Exception) {
-                handler.post { callback(Result.failure(e)) }
+                handler.post { callback(e.toFlutterResult()) }
             }
         }
     }
@@ -34,7 +35,7 @@ class TrendingApiImpl(
                 val kiosks = YouTube.kioskList.availableKiosks
                 handler.post { callback(Result.success(kiosks.toList())) }
             } catch (e: Exception) {
-                handler.post { callback(Result.failure(e)) }
+                handler.post { callback(e.toFlutterResult()) }
             }
         }
     }
@@ -48,7 +49,7 @@ class TrendingApiImpl(
                 val items = extractor.initialPage.items.map { mapStreamInfoItem(it) }
                 handler.post { callback(Result.success(items)) }
             } catch (e: Exception) {
-                handler.post { callback(Result.failure(e)) }
+                handler.post { callback(e.toFlutterResult()) }
             }
         }
     }
