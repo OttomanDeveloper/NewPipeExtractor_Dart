@@ -79,3 +79,14 @@ enum SearchFilter {
   final String value;
   const SearchFilter(this.value);
 }
+
+enum ServiceId {
+  youtube(0),
+  soundCloud(1),
+  mediaCccDe(2),
+  peerTube(3),
+  bandcamp(4);
+
+  final int value;
+  const ServiceId(this.value);
+}

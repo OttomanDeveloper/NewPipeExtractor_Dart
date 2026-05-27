@@ -1,5 +1,6 @@
 import 'package:newpipeextractor_dart/src/generated/extractor_api.g.dart';
 import 'package:newpipeextractor_dart/src/models/enums.dart';
+import 'package:newpipeextractor_dart/src/models/service_info.dart';
 import 'package:newpipeextractor_dart/src/models/video_info.dart';
 import 'package:newpipeextractor_dart/src/models/youtube_video.dart';
 import 'package:newpipeextractor_dart/src/models/youtube_channel.dart';
@@ -16,6 +17,12 @@ import 'package:newpipeextractor_dart/src/models/streams/audio_only_stream.dart'
 import 'package:newpipeextractor_dart/src/models/streams/video_only_stream.dart';
 import 'package:newpipeextractor_dart/src/models/streams/video_stream.dart';
 import 'package:newpipeextractor_dart/src/models/streams/subtitle_stream.dart';
+
+ServiceInfo mapServiceInfo(ServiceInfoDto d) => ServiceInfo(
+  serviceId: d.serviceId ?? 0,
+  name: d.name ?? 'Unknown',
+  baseUrl: d.baseUrl,
+);
 
 VideoInfo mapVideoInfo(VideoInfoDto d) => VideoInfo(
   id: d.id, url: d.url, name: d.name,
