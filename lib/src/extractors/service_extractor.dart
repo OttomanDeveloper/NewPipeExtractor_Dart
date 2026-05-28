@@ -67,7 +67,7 @@ class ServiceExtractor {
 
   /// Returns autocomplete suggestions from any service.
   static Future<List<String>> getSuggestions(int serviceId, String query) async {
-    final result = await _searchApi.getSuggestions(serviceId, query);
+    final result = await withReCaptchaRetry(() => _searchApi.getSuggestions(serviceId, query));
     return result.whereType<String>().toList();
   }
 
