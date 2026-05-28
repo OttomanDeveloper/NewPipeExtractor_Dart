@@ -51,7 +51,7 @@ class VideoExtractorApiImpl(
                 val audioStreams = try { extractor.audioStreams.map { mapAudioStream(it) } } catch (e: Exception) { emptyList() }
                 val videoOnlyStreams = try { extractor.videoOnlyStreams.map { mapVideoStream(it) } } catch (e: Exception) { emptyList() }
                 val videoStreams = try { extractor.videoStreams.map { mapVideoStream(it) } } catch (e: Exception) { emptyList() }
-                val subtitleStreams = try { extractor.subtitlesStreams.map { mapSubtitleStream(it) } } catch (e: Exception) { emptyList() }
+                val subtitleStreams = try { extractor.subtitlesDefault.map { mapSubtitleStream(it) } } catch (e: Exception) { emptyList() }
                 val segments = try { extractor.streamSegments.map { mapSegment(it) } } catch (e: Exception) { emptyList() }
                 val framesets = try { extractor.frames.map { mapFrameset(it) } } catch (e: Exception) { emptyList() }
 
