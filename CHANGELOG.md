@@ -1,3 +1,9 @@
+## 1.0.2
+
+* Fixed trending extractor — resilient fallback when YouTube changes tab names
+* Fixed `subtitlesStreams` typo causing compilation failure (now `subtitlesDefault`)
+* Removed explicit Kotlin Gradle Plugin dependency (uses Flutter built-in Kotlin)
+
 ## 1.0.1
 
 * Added pub.dev badges and updated installation instructions
