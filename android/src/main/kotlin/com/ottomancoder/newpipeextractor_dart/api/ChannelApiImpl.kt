@@ -69,6 +69,7 @@ class ChannelApiImpl(
                 channelExtractor = chExtractor
 
                 val feed = YouTube.getFeedExtractor(chExtractor.url)
+                    ?: throw Exception("Feed not available for this channel")
                 feed.fetchPage()
                 feedExtractor = feed
 

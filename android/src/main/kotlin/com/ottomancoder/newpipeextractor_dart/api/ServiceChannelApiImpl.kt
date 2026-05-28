@@ -51,6 +51,7 @@ class ServiceChannelApiImpl(
             try {
                 val service = NewPipe.getService(serviceId.toInt())
                 val feedExt = service.getFeedExtractor(url)
+                    ?: throw Exception("Feed not available for this channel")
                 feedExt.fetchPage()
                 val page = feedExt.initialPage
                 feedExtractors[serviceId] = feedExt
