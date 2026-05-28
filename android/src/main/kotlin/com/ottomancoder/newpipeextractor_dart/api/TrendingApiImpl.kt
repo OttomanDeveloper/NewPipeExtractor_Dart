@@ -5,6 +5,8 @@ import com.ottomancoder.newpipeextractor_dart.*
 import com.ottomancoder.newpipeextractor_dart.toFlutterResult
 import com.ottomancoder.newpipeextractor_dart.ExtractorHelper.mapStreamInfoItem
 import org.schabi.newpipe.extractor.ServiceList.YouTube
+import org.schabi.newpipe.extractor.stream.StreamInfoItem
+import org.schabi.newpipe.extractor.localization.ContentCountry
 import org.schabi.newpipe.extractor.localization.Localization
 import java.util.Locale
 import java.util.concurrent.ExecutorService
@@ -14,14 +16,40 @@ class TrendingApiImpl(
     private val handler: Handler
 ) : TrendingApi {
 
+    private fun fetchKiosk(kioskId: String): List<StreamInfoItemDto?> {
+        val extractor = YouTube.kioskList.getExtractorById(kioskId, null)
+        extractor.forceLocalization(Localization(Locale.getDefault().language, Locale.getDefault().country))
+        extractor.forceContentCountry(ContentCountry(Locale.getDefault().country.ifEmpty { "US" }))
+        extractor.fetchPage()
+        return extractor.initialPage.items.filterIsInstance<StreamInfoItem>().map { mapStreamInfoItem(it) }
+    }
+
     override fun getTrendingVideos(callback: (Result<List<StreamInfoItemDto?>>) -> Unit) {
         executor.execute {
             try {
-                val extractor = YouTube.kioskList.getExtractorById("Trending", null)
-                extractor.forceLocalization(Localization.fromLocale(Locale.getDefault()))
-                extractor.fetchPage()
-                val page = extractor.initialPage
-                val items = page.items.map { mapStreamInfoItem(it) }
+                // Try "Trending" first
+                val items = try {
+                    fetchKiosk("Trending")
+                } catch (_: Exception) {
+                    // Trending tab broken in v0.26.2 — fallback to default kiosk
+                    try {
+                        val defaultExtractor = YouTube.kioskList.defaultKioskExtractor
+                        defaultExtractor.forceLocalization(Localization(Locale.getDefault().language, Locale.getDefault().country))
+                        defaultExtractor.forceContentCountry(ContentCountry(Locale.getDefault().country.ifEmpty { "US" }))
+                        defaultExtractor.fetchPage()
+                        defaultExtractor.initialPage.items.filterIsInstance<StreamInfoItem>().map { mapStreamInfoItem(it) }
+                    } catch (_: Exception) {
+                        // Last resort: try each available kiosk
+                        var result: List<StreamInfoItemDto?>? = null
+                        for (kiosk in YouTube.kioskList.availableKiosks) {
+                            try {
+                                result = fetchKiosk(kiosk)
+                                break
+                            } catch (_: Exception) { continue }
+                        }
+                        result ?: emptyList()
+                    }
+                }
                 handler.post { callback(Result.success(items)) }
             } catch (e: Exception) {
                 handler.post { callback(e.toFlutterResult()) }
@@ -43,10 +71,7 @@ class TrendingApiImpl(
     override fun getKioskContent(kioskId: String, callback: (Result<List<StreamInfoItemDto?>>) -> Unit) {
         executor.execute {
             try {
-                val extractor = YouTube.kioskList.getExtractorById(kioskId, null)
-                extractor.forceLocalization(Localization.fromLocale(Locale.getDefault()))
-                extractor.fetchPage()
-                val items = extractor.initialPage.items.map { mapStreamInfoItem(it) }
+                val items = fetchKiosk(kioskId)
                 handler.post { callback(Result.success(items)) }
             } catch (e: Exception) {
                 handler.post { callback(e.toFlutterResult()) }
