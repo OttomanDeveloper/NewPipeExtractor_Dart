@@ -1,3 +1,65 @@
+## 2.0.0
+
+Relicensed to GPL-3.0, plus stateless token-based list pagination so multiple
+feeds can page independently without sharing a single native cursor.
+
+### Breaking changes
+
+* **Relicensed from BSD-3-Clause to GPL-3.0.** This package wraps NewPipe
+  Extractor (GPL-3.0); the license now matches it. Applications that use this
+  package are subject to the GPL-3.0. See `LICENSE` and `NOTICE`.
+* **Pagination is now driven by `PageToken` instead of internal cursors.** Each
+  list call returns its items plus a continuation token; pass that token back to
+  fetch the next page. This lets independent lists (e.g. several category feeds
+  plus search) paginate concurrently without clobbering each other.
+  * New types: `PageToken`, `PageDto`, `StreamListPageDto`, and the `StreamPage`
+    / `SearchPage` typedefs (`({items, next})` / `({result, next})`).
+  * `searchYoutube` / `searchYoutubeMusic` now return the result **plus** a `next`
+    token. The no-arg `getNextPage()` / `getNextMusicPage()` are replaced by
+    `searchNextPage(query, filters, token)` / `searchMusicNextPage(query, filters, token)`.
+  * `getChannelUploads` / `getPlaylistStreams` / `getTrendingVideos` /
+    `getKioskContent` now return `({items, next})` instead of a bare list.
+  * `getChannelNextPage(url, token)`, `getChannelTabNextPage(url, tabFilter, token)`,
+    `getPlaylistNextPage(url, token)` replace their no-arg predecessors; added
+    `getTrendingNextPage(token)` and `getKioskNextPage(kioskId, token)`.
+  * Channel-tab results now also carry a `next` token.
+
+### Improvements
+
+* **Network timeouts** — `DownloaderImpl` now sets `connectTimeout` (15s),
+  `writeTimeout` (30s), and a total `callTimeout` (45s) in addition to the
+  existing read timeout, so a stalled request can no longer hold a worker
+  thread indefinitely.
+
+### Fixes
+
+* Fixed `NetworkOnMainThreadException` (crash) when opening a trending/kiosk
+  feed — `getKioskContent` was performing the network fetch inside the
+  main-thread callback post; extraction now runs entirely on the worker pool
+  and only the result is delivered to the main thread.
+
+### Internal
+
+* New `ExtractorHelper` page helpers: `mapPage`, `pageFromDto`, `streamListPage`;
+  removed the per-API stateful extractor/page fields now that pagination is
+  stateless.
+
+## 1.1.0
+
+Closes the remaining NewPipe Extractor coverage gaps (all additive — no breaking changes):
+
+* **Subscriptions** — new `SubscriptionExtractor` reads subscription lists from public
+  channel URLs (`fromChannelUrl`) or exported files (`fromFile`), with `getSupportedSources`
+  / `getRelatedUrl`. Read-only extraction, not account login.
+* **Generic comments** — `ServiceExtractor.getComments` / `getCommentsNextPage` extract
+  comments on any service whose extractor supports them (previously YouTube-only).
+* **Generic channel tabs** — `ServiceExtractor.getChannelTabContent` / `getChannelTabNextPage`
+  fetch arbitrary channel-tab content for non-YouTube services that expose tabs.
+* **Localization read APIs** — `LocalizationExtractor.getSupportedLocalizations` /
+  `getSupportedCountries` enumerate the languages/countries a service supports.
+* Internal: shared comment + tab-item mappers in `ExtractorHelper`; the plugin's executor
+  is now a bounded thread pool (was an unbounded cached pool).
+
 ## 1.0.2
 
 * Fixed trending extractor — resilient fallback when YouTube changes tab names

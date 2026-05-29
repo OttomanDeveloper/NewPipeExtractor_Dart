@@ -3,7 +3,7 @@ package com.ottomancoder.newpipeextractor_dart.api
 import android.os.Handler
 import com.ottomancoder.newpipeextractor_dart.*
 import com.ottomancoder.newpipeextractor_dart.toFlutterResult
-import com.ottomancoder.newpipeextractor_dart.ExtractorHelper.imagesToList
+import com.ottomancoder.newpipeextractor_dart.ExtractorHelper.mapComment
 import com.ottomancoder.newpipeextractor_dart.ExtractorHelper.tryOrNull
 import org.schabi.newpipe.extractor.ListExtractor
 import org.schabi.newpipe.extractor.Page
@@ -72,24 +72,6 @@ class CommentsApiImpl(
                 handler.post { callback(e.toFlutterResult()) }
             }
         }
-    }
-
-    private fun mapComment(comment: CommentsInfoItem): CommentDto {
-        return CommentDto(
-            author = tryOrNull { comment.uploaderName },
-            commentText = tryOrNull { comment.commentText?.content },
-            uploadDate = tryOrNull { comment.textualUploadDate },
-            uploaderAvatars = tryOrNull { imagesToList(comment.uploaderAvatars) },
-            uploaderUrl = tryOrNull { comment.uploaderUrl },
-            commentId = tryOrNull { comment.commentId },
-            likeCount = tryOrNull { comment.likeCount.toLong() },
-            hearted = tryOrNull { comment.isHeartedByUploader },
-            pinned = tryOrNull { comment.isPinned },
-            replyCount = tryOrNull { comment.replyCount.toLong() },
-            isChannelOwner = tryOrNull { comment.isChannelOwner },
-            isUploaderVerified = tryOrNull { comment.isUploaderVerified },
-            streamPosition = tryOrNull { comment.streamPosition.toLong() }
-        )
     }
 
     override fun getCommentReplies(commentIndex: Long, callback: (Result<CommentsPageDto>) -> Unit) {

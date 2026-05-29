@@ -28,6 +28,8 @@ mixin _$VideoInfo {
   List<String> get uploaderAvatars => throw _privateConstructorUsedError;
   String? get uploadDate => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
+
+  /// Duration in seconds.
   int? get length => throw _privateConstructorUsedError;
   int? get viewCount => throw _privateConstructorUsedError;
   int? get likeCount => throw _privateConstructorUsedError;
@@ -36,17 +38,33 @@ mixin _$VideoInfo {
   int? get ageLimit => throw _privateConstructorUsedError;
   List<String> get tags => throw _privateConstructorUsedError;
   List<String> get thumbnails => throw _privateConstructorUsedError;
+
+  /// Stream type (video, live, audio-only, etc.).
   StreamType get streamType => throw _privateConstructorUsedError;
+
+  /// HLS manifest URL. Available for live streams.
   String? get hlsUrl => throw _privateConstructorUsedError;
+
+  /// DASH manifest URL for adaptive streaming.
   String? get dashMpdUrl => throw _privateConstructorUsedError;
+
+  /// Whether this is a YouTube Short.
   bool get isShort => throw _privateConstructorUsedError;
   bool get isUploaderVerified => throw _privateConstructorUsedError;
   Privacy get privacy => throw _privateConstructorUsedError;
+
+  /// Uploader's subscriber count (from the video page).
   int? get uploaderSubscriberCount => throw _privateConstructorUsedError;
+
+  /// Sub-channel (topic channel) name, if applicable.
   String? get subChannelName => throw _privateConstructorUsedError;
   String? get subChannelUrl => throw _privateConstructorUsedError;
   List<String> get subChannelAvatars => throw _privateConstructorUsedError;
+
+  /// Content license string (e.g., "Creative Commons").
   String? get licence => throw _privateConstructorUsedError;
+
+  /// Creator support/donation information.
   String? get supportInfo => throw _privateConstructorUsedError;
 
   /// Serializes this VideoInfo to a JSON map.
@@ -517,6 +535,8 @@ class _$VideoInfoImpl implements _VideoInfo {
   final String? uploadDate;
   @override
   final String? description;
+
+  /// Duration in seconds.
   @override
   final int? length;
   @override
@@ -547,13 +567,20 @@ class _$VideoInfoImpl implements _VideoInfo {
     return EqualUnmodifiableListView(_thumbnails);
   }
 
+  /// Stream type (video, live, audio-only, etc.).
   @override
   @JsonKey()
   final StreamType streamType;
+
+  /// HLS manifest URL. Available for live streams.
   @override
   final String? hlsUrl;
+
+  /// DASH manifest URL for adaptive streaming.
   @override
   final String? dashMpdUrl;
+
+  /// Whether this is a YouTube Short.
   @override
   @JsonKey()
   final bool isShort;
@@ -563,8 +590,12 @@ class _$VideoInfoImpl implements _VideoInfo {
   @override
   @JsonKey()
   final Privacy privacy;
+
+  /// Uploader's subscriber count (from the video page).
   @override
   final int? uploaderSubscriberCount;
+
+  /// Sub-channel (topic channel) name, if applicable.
   @override
   final String? subChannelName;
   @override
@@ -579,8 +610,11 @@ class _$VideoInfoImpl implements _VideoInfo {
     return EqualUnmodifiableListView(_subChannelAvatars);
   }
 
+  /// Content license string (e.g., "Creative Commons").
   @override
   final String? licence;
+
+  /// Creator support/donation information.
   @override
   final String? supportInfo;
 
@@ -744,6 +778,8 @@ abstract class _VideoInfo implements VideoInfo {
   String? get uploadDate;
   @override
   String? get description;
+
+  /// Duration in seconds.
   @override
   int? get length;
   @override
@@ -760,28 +796,44 @@ abstract class _VideoInfo implements VideoInfo {
   List<String> get tags;
   @override
   List<String> get thumbnails;
+
+  /// Stream type (video, live, audio-only, etc.).
   @override
   StreamType get streamType;
+
+  /// HLS manifest URL. Available for live streams.
   @override
   String? get hlsUrl;
+
+  /// DASH manifest URL for adaptive streaming.
   @override
   String? get dashMpdUrl;
+
+  /// Whether this is a YouTube Short.
   @override
   bool get isShort;
   @override
   bool get isUploaderVerified;
   @override
   Privacy get privacy;
+
+  /// Uploader's subscriber count (from the video page).
   @override
   int? get uploaderSubscriberCount;
+
+  /// Sub-channel (topic channel) name, if applicable.
   @override
   String? get subChannelName;
   @override
   String? get subChannelUrl;
   @override
   List<String> get subChannelAvatars;
+
+  /// Content license string (e.g., "Creative Commons").
   @override
   String? get licence;
+
+  /// Creator support/donation information.
   @override
   String? get supportInfo;
 

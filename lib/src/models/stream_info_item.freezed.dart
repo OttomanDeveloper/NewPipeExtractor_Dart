@@ -27,7 +27,11 @@ mixin _$StreamInfoItem {
   String? get uploaderUrl => throw _privateConstructorUsedError;
   List<String> get uploaderAvatars => throw _privateConstructorUsedError;
   String? get uploadDate => throw _privateConstructorUsedError;
+
+  /// ISO 8601 date string. Null on older Android versions.
   String? get date => throw _privateConstructorUsedError;
+
+  /// Duration in seconds.
   int? get duration => throw _privateConstructorUsedError;
   int? get viewCount => throw _privateConstructorUsedError;
   bool get isShort => throw _privateConstructorUsedError;
@@ -290,8 +294,12 @@ class _$StreamInfoItemImpl implements _StreamInfoItem {
 
   @override
   final String? uploadDate;
+
+  /// ISO 8601 date string. Null on older Android versions.
   @override
   final String? date;
+
+  /// Duration in seconds.
   @override
   final int? duration;
   @override
@@ -405,8 +413,12 @@ abstract class _StreamInfoItem implements StreamInfoItem {
   List<String> get uploaderAvatars;
   @override
   String? get uploadDate;
+
+  /// ISO 8601 date string. Null on older Android versions.
   @override
   String? get date;
+
+  /// Duration in seconds.
   @override
   int? get duration;
   @override

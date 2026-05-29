@@ -7,6 +7,9 @@ import 'package:newpipeextractor_dart/src/models/youtube_channel.dart';
 import 'package:newpipeextractor_dart/src/models/youtube_playlist.dart';
 import 'package:newpipeextractor_dart/src/models/search_result.dart';
 import 'package:newpipeextractor_dart/src/models/stream_info_item.dart';
+import 'package:newpipeextractor_dart/src/models/channel_info_item.dart';
+import 'package:newpipeextractor_dart/src/models/playlist_info_item.dart';
+import 'package:newpipeextractor_dart/src/models/comments_page.dart';
 import 'package:newpipeextractor_dart/src/utils/recaptcha_helper.dart';
 
 /// Generic extractor that works across all supported services (YouTube, SoundCloud,
@@ -21,6 +24,7 @@ class ServiceExtractor {
   static final _channelApi = ServiceChannelApi();
   static final _playlistApi = ServicePlaylistApi();
   static final _kioskApi = ServiceKioskApi();
+  static final _commentsApi = ServiceCommentsApi();
 
   // ─── Services ────────────────────────────────────────
 
@@ -91,6 +95,21 @@ class ServiceExtractor {
     return dtos.whereType<StreamInfoItemDto>().map(m.mapStreamInfoItem).toList();
   }
 
+  /// Returns content from a specific channel tab (e.g. 'videos', 'playlists') for
+  /// services that expose tabs. Throws if the tab is unavailable for the service.
+  static Future<({List<StreamInfoItem> streams, List<PlaylistInfoItem> playlists, List<ChannelInfoItem> channels, bool hasNextPage})>
+      getChannelTabContent(int serviceId, String url, String tabFilter) async {
+    final dto = await withReCaptchaRetry(() => _channelApi.getServiceChannelTabContent(serviceId, url, tabFilter));
+    return m.mapTabPage(dto);
+  }
+
+  /// Returns the next page of the most recent [getChannelTabContent] call for a service.
+  static Future<({List<StreamInfoItem> streams, List<PlaylistInfoItem> playlists, List<ChannelInfoItem> channels, bool hasNextPage})>
+      getChannelTabNextPage(int serviceId) async {
+    final dto = await withReCaptchaRetry(() => _channelApi.getServiceChannelTabNextPage(serviceId));
+    return m.mapTabPage(dto);
+  }
+
   // ─── Playlists ───────────────────────────────────────
 
   /// Returns playlist/album info from any service.
@@ -123,5 +142,21 @@ class ServiceExtractor {
   static Future<List<StreamInfoItem>> getKioskContent(int serviceId, String kioskId) async {
     final dtos = await withReCaptchaRetry(() => _kioskApi.getServiceKioskContent(serviceId, kioskId));
     return dtos.whereType<StreamInfoItemDto>().map(m.mapStreamInfoItem).toList();
+  }
+
+  // ─── Comments ────────────────────────────────────────
+
+  /// Returns the first page of comments for a stream on any service that supports
+  /// them. Throws if the service has no comments extractor.
+  static Future<CommentsPage> getComments(int serviceId, String url) async {
+    final dto = await withReCaptchaRetry(() => _commentsApi.getComments(serviceId, url));
+    return m.mapCommentsPage(dto);
+  }
+
+  /// Returns the next page of comments for a service. Pagination state is stored
+  /// per serviceId. Returns an empty page when there are no more comments.
+  static Future<CommentsPage> getCommentsNextPage(int serviceId) async {
+    final dto = await withReCaptchaRetry(() => _commentsApi.getNextCommentsPage(serviceId));
+    return m.mapCommentsPage(dto);
   }
 }

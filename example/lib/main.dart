@@ -32,12 +32,12 @@ class _SearchScreenState extends State<SearchScreen> {
   Future<void> _search(String query) async {
     setState(() => _loading = true);
     try {
-      final result = await SearchExtractor.searchYoutube(
+      final page = await SearchExtractor.searchYoutube(
         query,
         [SearchFilter.videos.value],
       );
       setState(() {
-        _results = result.videos;
+        _results = page.result.videos;
         _loading = false;
       });
     } catch (e) {

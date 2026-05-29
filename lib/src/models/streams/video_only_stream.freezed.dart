@@ -22,6 +22,8 @@ VideoOnlyStream _$VideoOnlyStreamFromJson(Map<String, dynamic> json) {
 mixin _$VideoOnlyStream {
   String? get url => throw _privateConstructorUsedError;
   String? get resolution => throw _privateConstructorUsedError;
+
+  /// Frames per second.
   int get fps => throw _privateConstructorUsedError;
   String? get formatName => throw _privateConstructorUsedError;
   String? get formatSuffix => throw _privateConstructorUsedError;
@@ -187,6 +189,8 @@ class _$VideoOnlyStreamImpl implements _VideoOnlyStream {
   final String? url;
   @override
   final String? resolution;
+
+  /// Frames per second.
   @override
   @JsonKey()
   final int fps;
@@ -257,6 +261,8 @@ abstract class _VideoOnlyStream implements VideoOnlyStream {
   String? get url;
   @override
   String? get resolution;
+
+  /// Frames per second.
   @override
   int get fps;
   @override

@@ -4,28 +4,24 @@ import android.os.Handler
 import com.ottomancoder.newpipeextractor_dart.*
 import com.ottomancoder.newpipeextractor_dart.toFlutterResult
 import com.ottomancoder.newpipeextractor_dart.ExtractorHelper.imagesToList
-import com.ottomancoder.newpipeextractor_dart.ExtractorHelper.mapStreamInfoItem
 import com.ottomancoder.newpipeextractor_dart.ExtractorHelper.tryOrNull
-import org.schabi.newpipe.extractor.ListExtractor
 import org.schabi.newpipe.extractor.ServiceList.YouTube
-import org.schabi.newpipe.extractor.playlist.PlaylistExtractor
-import org.schabi.newpipe.extractor.stream.StreamInfoItem
 import java.util.concurrent.ExecutorService
 
+/**
+ * Stateless playlist extraction. Stream pagination is driven by [PageDto]
+ * tokens passed back from Dart.
+ */
 class PlaylistApiImpl(
     private val executor: ExecutorService,
     private val handler: Handler
 ) : PlaylistApi {
-
-    private var extractor: PlaylistExtractor? = null
-    private var currentPage: ListExtractor.InfoItemsPage<StreamInfoItem>? = null
 
     override fun getPlaylistDetails(url: String, callback: (Result<PlaylistDto>) -> Unit) {
         executor.execute {
             try {
                 val ext = YouTube.getPlaylistExtractor(url)
                 ext.fetchPage()
-                extractor = ext
 
                 val result = PlaylistDto(
                     id = tryOrNull { ext.id },
@@ -47,37 +43,31 @@ class PlaylistApiImpl(
         }
     }
 
-    override fun getPlaylistStreams(url: String, callback: (Result<List<StreamInfoItemDto?>>) -> Unit) {
+    override fun getPlaylistStreams(url: String, callback: (Result<StreamListPageDto>) -> Unit) {
         executor.execute {
             try {
                 val ext = YouTube.getPlaylistExtractor(url)
                 ext.fetchPage()
-                extractor = ext
-
-                val page = ext.initialPage
-                currentPage = page
-
-                val items = page.items.map { mapStreamInfoItem(it) }
-                handler.post { callback(Result.success(items)) }
+                val dto = ExtractorHelper.streamListPage(ext.initialPage)
+                handler.post { callback(Result.success(dto)) }
             } catch (e: Exception) {
                 handler.post { callback(e.toFlutterResult()) }
             }
         }
     }
 
-    override fun getPlaylistNextPage(callback: (Result<List<StreamInfoItemDto?>>) -> Unit) {
+    override fun getPlaylistNextPage(
+        url: String,
+        page: PageDto,
+        callback: (Result<StreamListPageDto>) -> Unit
+    ) {
         executor.execute {
             try {
-                val page = currentPage
-                val ext = extractor
-                if (page != null && ext != null && page.hasNextPage()) {
-                    val nextPage = ext.getPage(page.nextPage)
-                    currentPage = nextPage
-                    val items = nextPage.items.map { mapStreamInfoItem(it) }
-                    handler.post { callback(Result.success(items)) }
-                } else {
-                    handler.post { callback(Result.success(emptyList())) }
-                }
+                // No fetchPage(): getPage(token) is self-contained (proven by Phase 0 spike).
+                val ext = YouTube.getPlaylistExtractor(url)
+                val itemsPage = ext.getPage(ExtractorHelper.pageFromDto(page))
+                val dto = ExtractorHelper.streamListPage(itemsPage)
+                handler.post { callback(Result.success(dto)) }
             } catch (e: Exception) {
                 handler.post { callback(e.toFlutterResult()) }
             }

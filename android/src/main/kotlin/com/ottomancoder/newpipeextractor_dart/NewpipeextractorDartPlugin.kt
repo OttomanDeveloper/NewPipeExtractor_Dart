@@ -12,11 +12,31 @@ import org.schabi.newpipe.extractor.localization.ContentCountry
 import org.schabi.newpipe.extractor.localization.Localization
 import java.util.Locale
 import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
+import java.util.concurrent.LinkedBlockingQueue
+import java.util.concurrent.ThreadPoolExecutor
+import java.util.concurrent.TimeUnit
 
 class NewpipeextractorDartPlugin : FlutterPlugin {
 
-    private val executor: ExecutorService = Executors.newSingleThreadExecutor()
+    // A bounded thread pool so independent extractor calls (search, suggestions,
+    // video info, ...) run concurrently without the pool growing without limit.
+    // A single-thread executor caused search requests to starve behind the
+    // per-keystroke suggestion requests, leaving the UI stuck on an infinite
+    // spinner; a cached pool fixed that but had no maximum size, so a burst of
+    // requests (e.g. fast typing) could spawn an unbounded number of threads.
+    //
+    // This caps live threads at MAX_THREADS. Overflow waits in the queue as
+    // lightweight Runnables instead of new threads. OkHttp's callTimeout (see
+    // DownloaderImpl) guarantees every task finishes within ~45s, so the queue
+    // always drains; allowCoreThreadTimeOut reclaims idle threads after 60s.
+    private val executor: ExecutorService = run {
+        val maxThreads = (Runtime.getRuntime().availableProcessors() * 2).coerceIn(4, 16)
+        ThreadPoolExecutor(
+            maxThreads, maxThreads,
+            60L, TimeUnit.SECONDS,
+            LinkedBlockingQueue()
+        ).apply { allowCoreThreadTimeOut(true) }
+    }
     private val handler: Handler = Handler(Looper.getMainLooper())
 
     companion object {
@@ -57,6 +77,8 @@ class NewpipeextractorDartPlugin : FlutterPlugin {
         ServiceChannelApi.setUp(messenger, ServiceChannelApiImpl(executor, handler))
         ServicePlaylistApi.setUp(messenger, ServicePlaylistApiImpl(executor, handler))
         ServiceKioskApi.setUp(messenger, ServiceKioskApiImpl(executor, handler))
+        ServiceCommentsApi.setUp(messenger, ServiceCommentsApiImpl(executor, handler))
+        SubscriptionApi.setUp(messenger, SubscriptionApiImpl(executor, handler))
     }
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
@@ -76,6 +98,8 @@ class NewpipeextractorDartPlugin : FlutterPlugin {
         ServiceChannelApi.setUp(messenger, null)
         ServicePlaylistApi.setUp(messenger, null)
         ServiceKioskApi.setUp(messenger, null)
+        ServiceCommentsApi.setUp(messenger, null)
+        SubscriptionApi.setUp(messenger, null)
         executor.shutdown()
     }
 }

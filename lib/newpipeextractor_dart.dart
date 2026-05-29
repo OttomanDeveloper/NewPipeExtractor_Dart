@@ -10,10 +10,14 @@ export 'src/models/comments_page.dart';
 export 'src/models/stream_info_item.dart';
 export 'src/models/channel_info_item.dart';
 export 'src/models/playlist_info_item.dart';
+export 'src/models/page_token.dart';
+export 'src/models/paged.dart';
 export 'src/models/stream_segment.dart';
 export 'src/models/frameset.dart';
 export 'src/models/enums.dart';
 export 'src/models/service_info.dart';
+export 'src/models/localization.dart';
+export 'src/models/subscription_item.dart';
 
 // Streams
 export 'src/models/streams/audio_only_stream.dart';
@@ -32,6 +36,7 @@ export 'src/extractors/url_extractor.dart';
 export 'src/extractors/cookie_extractor.dart';
 export 'src/extractors/localization_extractor.dart';
 export 'src/extractors/service_extractor.dart';
+export 'src/extractors/subscription_extractor.dart';
 
 // Exceptions
 export 'src/exceptions/extractor_exception.dart';

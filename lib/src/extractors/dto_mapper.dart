@@ -1,6 +1,8 @@
 import 'package:newpipeextractor_dart/src/generated/extractor_api.g.dart';
 import 'package:newpipeextractor_dart/src/models/enums.dart';
 import 'package:newpipeextractor_dart/src/models/service_info.dart';
+import 'package:newpipeextractor_dart/src/models/localization.dart';
+import 'package:newpipeextractor_dart/src/models/subscription_item.dart';
 import 'package:newpipeextractor_dart/src/models/video_info.dart';
 import 'package:newpipeextractor_dart/src/models/youtube_video.dart';
 import 'package:newpipeextractor_dart/src/models/youtube_channel.dart';
@@ -22,6 +24,22 @@ ServiceInfo mapServiceInfo(ServiceInfoDto d) => ServiceInfo(
   serviceId: d.serviceId ?? 0,
   name: d.name ?? 'Unknown',
   baseUrl: d.baseUrl,
+);
+
+Localization mapLocalization(LocalizationDto d) => Localization(
+  languageCode: d.languageCode ?? '',
+  countryCode: d.countryCode ?? '',
+  localizationCode: d.localizationCode ?? '',
+);
+
+ContentCountry mapContentCountry(ContentCountryDto d) => ContentCountry(
+  countryCode: d.countryCode ?? '',
+);
+
+SubscriptionItem mapSubscriptionItem(SubscriptionItemDto d) => SubscriptionItem(
+  serviceId: d.serviceId ?? 0,
+  url: d.url,
+  name: d.name,
 );
 
 VideoInfo mapVideoInfo(VideoInfoDto d) => VideoInfo(
@@ -104,6 +122,14 @@ Frameset mapFrameset(FramesetDto d) => Frameset(
   urls: d.urls?.whereType<String>().toList() ?? [],
   width: d.width ?? 0, height: d.height ?? 0,
   totalCount: d.totalCount ?? 0,
+);
+
+({List<StreamInfoItem> streams, List<PlaylistInfoItem> playlists, List<ChannelInfoItem> channels, bool hasNextPage})
+    mapTabPage(TabPageDto d) => (
+  streams: d.streamItems?.whereType<StreamInfoItemDto>().map(mapStreamInfoItem).toList() ?? [],
+  playlists: d.playlistItems?.whereType<PlaylistInfoItemDto>().map(mapPlaylistInfoItem).toList() ?? [],
+  channels: d.channelItems?.whereType<ChannelInfoItemDto>().map(mapChannelInfoItem).toList() ?? [],
+  hasNextPage: d.hasNextPage ?? false,
 );
 
 SearchResult mapSearchResult(SearchResultDto d) => SearchResult(

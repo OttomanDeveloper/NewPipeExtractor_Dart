@@ -11,6 +11,7 @@ A Flutter plugin that wraps the [NewPipe Extractor](https://github.com/TeamNewPi
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Quick Start](#quick-start)
+- [Pagination](#pagination)
 - [API Reference](#api-reference)
   - [VideoExtractor](#videoextractor)
   - [SearchExtractor](#searchextractor)
@@ -22,6 +23,7 @@ A Flutter plugin that wraps the [NewPipe Extractor](https://github.com/TeamNewPi
   - [CookieExtractor](#cookieextractor)
   - [LocalizationExtractor](#localizationextractor)
   - [ServiceExtractor](#serviceextractor-multi-service)
+  - [SubscriptionExtractor](#subscriptionextractor)
 - [Models](#models)
   - [YoutubeVideo](#youtubevideo)
   - [VideoInfo](#videoinfo)
@@ -41,6 +43,7 @@ A Flutter plugin that wraps the [NewPipe Extractor](https://github.com/TeamNewPi
   - [ExtractorHttpClient](#extractorhttpclient)
 - [Limitations](#limitations)
 - [License](#license)
+- [Disclaimer](#disclaimer)
 
 ## Requirements
 
@@ -64,7 +67,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  newpipeextractor_dart: ^1.0.0
+  newpipeextractor_dart: ^2.0.0
 ```
 
 Or install via command line:
@@ -84,12 +87,12 @@ import 'package:newpipeextractor_dart/newpipeextractor_dart.dart';
 ```dart
 import 'package:newpipeextractor_dart/newpipeextractor_dart.dart';
 
-// Search YouTube
-final results = await SearchExtractor.searchYoutube(
+// Search YouTube — returns the result plus a pagination token
+final page = await SearchExtractor.searchYoutube(
   'flutter tutorial',
   [SearchFilter.videos.value],
 );
-for (final video in results.videos) {
+for (final video in page.result.videos) {
   print('${video.name} — ${video.uploaderName}');
 }
 
@@ -119,6 +122,40 @@ await LocalizationExtractor.setLocalization('de', 'DE');
 
 ---
 
+## Pagination
+
+List endpoints return their items **plus an opaque `PageToken`** (the `next` field).
+Hold that token and pass it back to the matching `…NextPage(…)` call to fetch the
+following page. **`next == null` means there are no more pages.** Because the cursor
+lives in the token (not in native state), independent lists paginate without
+interfering — you can page a search and several feeds at the same time.
+
+Two record shapes are returned by the YouTube extractors:
+
+```dart
+typedef StreamPage = ({List<StreamInfoItem> items, PageToken? next});
+typedef SearchPage = ({SearchResult result, PageToken? next}); // videos + channels + playlists
+```
+
+Example — accumulate every page of a search:
+
+```dart
+var page = await SearchExtractor.searchYoutube('lo-fi', const []);
+final all = <StreamInfoItem>[...page.result.videos];
+while (page.next != null) {
+  page = await SearchExtractor.searchNextPage('lo-fi', const [], page.next!);
+  all.addAll(page.result.videos);
+}
+```
+
+> Token pagination covers the YouTube extractors: search, channel uploads,
+> channel tabs, playlist streams, trending, and kiosks. The generic
+> [`ServiceExtractor`](#serviceextractor-multi-service) and
+> [`CommentsExtractor`](#commentsextractor) still use **native per-call cursors**
+> (no-arg `…NextPage()`) — see their sections.
+
+---
+
 ## API Reference
 
 All extractors use static methods. Every method that calls the native layer returns a `Future`.
@@ -143,25 +180,30 @@ print(video.videoInfo.isShort);    // true if YouTube Short
 
 ### SearchExtractor
 
-YouTube and YouTube Music search with pagination and autocomplete.
+YouTube and YouTube Music search with [token pagination](#pagination) and autocomplete.
 
 | Method | Returns | Description |
 |---|---|---|
-| `searchYoutube(String query, List<String> filters)` | `Future<SearchResult>` | Search YouTube — returns videos, playlists, channels |
-| `getNextPage()` | `Future<SearchResult>` | Next page of YouTube search results |
-| `searchYoutubeMusic(String query, List<String> filters)` | `Future<SearchResult>` | Search YouTube Music |
-| `getNextMusicPage()` | `Future<SearchResult>` | Next page of YouTube Music results |
+| `searchYoutube(String query, List<String> filters)` | `Future<SearchPage>` | Search YouTube — videos, playlists, channels + `next` token |
+| `searchNextPage(String query, List<String> filters, PageToken token)` | `Future<SearchPage>` | Next page for the given token |
+| `searchYoutubeMusic(String query, List<String> filters)` | `Future<SearchPage>` | Search YouTube Music |
+| `searchMusicNextPage(String query, List<String> filters, PageToken token)` | `Future<SearchPage>` | Next page of YouTube Music results |
 | `getSearchSuggestions(String query)` | `Future<List<String>>` | Autocomplete suggestions |
 
 ```dart
 // Use SearchFilter enum for type-safe filters
-final results = await SearchExtractor.searchYoutube(
+final page = await SearchExtractor.searchYoutube(
   'dart programming',
   [SearchFilter.videos.value],
 );
+for (final v in page.result.videos) print(v.name);
 
-// Paginate
-final page2 = await SearchExtractor.getNextPage();
+// Paginate with the returned token
+if (page.next != null) {
+  final page2 = await SearchExtractor.searchNextPage(
+    'dart programming', [SearchFilter.videos.value], page.next!,
+  );
+}
 
 // Autocomplete
 final suggestions = await SearchExtractor.getSearchSuggestions('flu');
@@ -172,13 +214,15 @@ final suggestions = await SearchExtractor.getSearchSuggestions('flu');
 
 YouTube channel info, uploads, and tab-based browsing (Videos, Shorts, Live, Playlists).
 
+All list methods use [token pagination](#pagination).
+
 | Method | Returns | Description |
 |---|---|---|
 | `getChannelInfo(String url)` | `Future<YoutubeChannel>` | Channel metadata with available tabs |
-| `getChannelUploads(String url)` | `Future<List<StreamInfoItem>>` | Channel uploads via feed |
-| `getChannelNextPage()` | `Future<List<StreamInfoItem>>` | Next page of channel uploads |
-| `getChannelTabContent(String url, String tabFilter)` | `Future<({List<StreamInfoItem> streams, List<PlaylistInfoItem> playlists, List<ChannelInfoItem> channels, bool hasNextPage})>` | Content from a specific channel tab |
-| `getChannelTabNextPage()` | `Future<({List<StreamInfoItem> streams, List<PlaylistInfoItem> playlists, List<ChannelInfoItem> channels, bool hasNextPage})>` | Next page of tab content |
+| `getChannelUploads(String url)` | `Future<StreamPage>` | Channel uploads via feed + `next` token |
+| `getChannelNextPage(String url, PageToken token)` | `Future<StreamPage>` | Next page of channel uploads |
+| `getChannelTabContent(String url, String tabFilter)` | `Future<({List<StreamInfoItem> streams, List<PlaylistInfoItem> playlists, List<ChannelInfoItem> channels, bool hasNextPage, PageToken? next})>` | Content from a specific channel tab |
+| `getChannelTabNextPage(String url, String tabFilter, PageToken token)` | `Future<(… same shape …)>` | Next page of tab content |
 
 ```dart
 final channel = await ChannelExtractor.getChannelInfo(url);
@@ -186,20 +230,26 @@ print(channel.name);
 print(channel.isVerified);
 print(channel.tabs); // [ChannelTab.videos, ChannelTab.shorts, ChannelTab.live, ...]
 
-// Browse Shorts tab
+// Uploads, then the next page via the token
+final uploads = await ChannelExtractor.getChannelUploads(url);
+for (final v in uploads.items) print(v.name);
+if (uploads.next != null) {
+  final more = await ChannelExtractor.getChannelNextPage(url, uploads.next!);
+}
+
+// Browse the Shorts tab
 final shorts = await ChannelExtractor.getChannelTabContent(url, 'shorts');
 for (final item in shorts.streams) {
   print('${item.name} (${item.isShort})');
 }
+if (shorts.next != null) {
+  final more = await ChannelExtractor.getChannelTabNextPage(url, 'shorts', shorts.next!);
+}
 
-// Browse Playlists tab — now returns playlists too
+// The Playlists tab returns playlists in the same record
 final playlistsTab = await ChannelExtractor.getChannelTabContent(url, 'playlists');
 for (final pl in playlistsTab.playlists) {
   print('${pl.name} — ${pl.streamCount} videos');
-}
-
-if (shorts.hasNextPage) {
-  final more = await ChannelExtractor.getChannelTabNextPage();
 }
 ```
 
@@ -207,11 +257,13 @@ if (shorts.hasNextPage) {
 
 YouTube playlist details and paginated stream listing.
 
+All list methods use [token pagination](#pagination).
+
 | Method | Returns | Description |
 |---|---|---|
 | `getPlaylistDetails(String url)` | `Future<YoutubePlaylist>` | Playlist metadata |
-| `getPlaylistStreams(String url)` | `Future<List<StreamInfoItem>>` | Videos in the playlist |
-| `getPlaylistNextPage()` | `Future<List<StreamInfoItem>>` | Next page of playlist videos |
+| `getPlaylistStreams(String url)` | `Future<StreamPage>` | First page of videos + `next` token |
+| `getPlaylistNextPage(String url, PageToken token)` | `Future<StreamPage>` | Next page of playlist videos |
 
 ```dart
 final playlist = await PlaylistExtractor.getPlaylistDetails(url);
@@ -219,7 +271,10 @@ print('${playlist.name} — ${playlist.streamCount} videos');
 print('Type: ${playlist.playlistType}'); // PlaylistType.normal, mixStream, etc.
 
 final streams = await PlaylistExtractor.getPlaylistStreams(url);
-final more = await PlaylistExtractor.getPlaylistNextPage();
+for (final v in streams.items) print(v.name);
+if (streams.next != null) {
+  final more = await PlaylistExtractor.getPlaylistNextPage(url, streams.next!);
+}
 ```
 
 ### CommentsExtractor
@@ -254,23 +309,35 @@ if (page.comments.first.replyCount > 0) {
 
 ### TrendingExtractor
 
-YouTube trending/kiosk content.
+YouTube trending/kiosk content with [token pagination](#pagination).
 
 | Method | Returns | Description |
 |---|---|---|
-| `getTrendingVideos()` | `Future<List<StreamInfoItem>>` | Trending videos (default locale) |
+| `getTrendingVideos()` | `Future<StreamPage>` | Trending videos (default locale) + `next` token |
+| `getTrendingNextPage(PageToken token)` | `Future<StreamPage>` | Next page of trending videos |
 | `listKiosks()` | `Future<List<String>>` | Available kiosk IDs (e.g., "Trending", "Top 50") |
-| `getKioskContent(String kioskId)` | `Future<List<StreamInfoItem>>` | Content from a specific kiosk |
+| `getKioskContent(String kioskId)` | `Future<StreamPage>` | First page of a specific kiosk + `next` token |
+| `getKioskNextPage(String kioskId, PageToken token)` | `Future<StreamPage>` | Next page of a kiosk |
 
 ```dart
 final trending = await TrendingExtractor.getTrendingVideos();
+for (final v in trending.items) print(v.name);
+if (trending.next != null) {
+  final more = await TrendingExtractor.getTrendingNextPage(trending.next!);
+}
 
 // Discover available kiosks
 final kiosks = await TrendingExtractor.listKiosks();
 // ['Trending', 'Top 50', 'New & Hot', ...]
 
 final top50 = await TrendingExtractor.getKioskContent('Top 50');
+if (top50.next != null) {
+  final more = await TrendingExtractor.getKioskNextPage('Top 50', top50.next!);
+}
 ```
+
+> Note: YouTube's "Trending" kiosk is often a single page (no continuation);
+> `next` will be `null` in that case. The default/home kiosk paginates.
 
 ### UrlExtractor
 
@@ -310,6 +377,8 @@ Control the language and country for content extraction.
 | Method | Returns | Description |
 |---|---|---|
 | `setLocalization(String languageCode, String countryCode)` | `Future<void>` | Set content language and country (affects all subsequent requests) |
+| `getSupportedLocalizations({int serviceId = 0})` | `Future<List<Localization>>` | Languages/countries a service supports (local lookup, no network) |
+| `getSupportedCountries({int serviceId = 0})` | `Future<List<ContentCountry>>` | Countries a service supports for region-specific content |
 
 ```dart
 // Get German content
@@ -318,6 +387,10 @@ await LocalizationExtractor.setLocalization('de', 'DE');
 // Get Japanese trending
 await LocalizationExtractor.setLocalization('ja', 'JP');
 final trending = await TrendingExtractor.getTrendingVideos();
+
+// Discover what a service supports before picking one
+final locales = await LocalizationExtractor.getSupportedLocalizations();
+final countries = await LocalizationExtractor.getSupportedCountries();
 ```
 
 ### ServiceExtractor (Multi-Service)
@@ -349,6 +422,10 @@ Generic extractor that works across all 5 supported services. Use `ServiceId` en
 | `getPlaylistContentNextPage(int serviceId)` | `Future<List<StreamInfoItem>>` | Next page of playlist tracks |
 | `listKiosks(int serviceId)` | `Future<List<String>>` | Available kiosks for a service |
 | `getKioskContent(int serviceId, String kioskId)` | `Future<List<StreamInfoItem>>` | Kiosk content (charts, trending, etc.) |
+| `getComments(int serviceId, String url)` | `Future<CommentsPage>` | Comments for a stream (services that support them) |
+| `getCommentsNextPage(int serviceId)` | `Future<CommentsPage>` | Next page of comments |
+| `getChannelTabContent(int serviceId, String url, String tabFilter)` | `Future<(...)>` | Content of a specific channel tab |
+| `getChannelTabNextPage(int serviceId)` | `Future<(...)>` | Next page of channel-tab content |
 
 ```dart
 // Discover services
@@ -374,6 +451,36 @@ final tracks = await ServiceExtractor.getPlaylistContent(
 final kiosks = await ServiceExtractor.listKiosks(ServiceId.peerTube.value);
 final content = await ServiceExtractor.getKioskContent(
   ServiceId.peerTube.value, kiosks.first,
+);
+```
+
+### SubscriptionExtractor
+
+Reads subscription lists. This is **read-only extraction, not account login** — `fromChannelUrl`
+works only where a channel's subscriptions are public, and `fromFile` parses an exported
+subscription file. Most services support neither; call `getSupportedSources` first.
+
+| Method | Returns | Description |
+|---|---|---|
+| `getSupportedSources(int serviceId)` | `Future<List<String>>` | Supported import sources (`'CHANNEL_URL'`, `'INPUT_STREAM'`); empty = unsupported |
+| `getRelatedUrl(int serviceId)` | `Future<String?>` | URL where the user finds the data needed for import |
+| `fromChannelUrl(int serviceId, String channelUrl)` | `Future<List<SubscriptionItem>>` | Public subscription list of a channel |
+| `fromFile(int serviceId, Uint8List content, {String contentType})` | `Future<List<SubscriptionItem>>` | Parse an exported subscription file |
+
+```dart
+// What can YouTube import?
+final sources = await SubscriptionExtractor.getSupportedSources(ServiceId.youtube.value);
+
+// Read a channel's public subscriptions
+if (sources.contains('CHANNEL_URL')) {
+  final subs = await SubscriptionExtractor.fromChannelUrl(
+    ServiceId.youtube.value, channelUrl,
+  );
+}
+
+// Import an exported file (e.g. NewPipe .json bytes)
+final subs = await SubscriptionExtractor.fromFile(
+  ServiceId.youtube.value, fileBytes, contentType: 'application/json',
 );
 ```
 
@@ -598,6 +705,30 @@ Lightweight video item used in lists (search results, playlists, trending, etc.)
 | `name` | `String` (required) |
 | `baseUrl` | `String?` |
 
+**Localization** — A language/country pair a service supports (from `LocalizationExtractor.getSupportedLocalizations`).
+
+| Field | Type | Description |
+|---|---|---|
+| `languageCode` | `String` | Language code (e.g. `en`) |
+| `countryCode` | `String` | Country code (e.g. `GB`) |
+| `localizationCode` | `String` | Combined code (e.g. `en-GB`) |
+
+**ContentCountry** — A country a service supports for region-specific content (from `LocalizationExtractor.getSupportedCountries`).
+
+| Field | Type | Description |
+|---|---|---|
+| `countryCode` | `String` | ISO 3166-1 alpha-2 (e.g. `US`) |
+
+**SubscriptionItem** — A subscribed channel/artist (from `SubscriptionExtractor`).
+
+| Field | Type | Description |
+|---|---|---|
+| `serviceId` | `int` | Service the channel belongs to |
+| `url` | `String?` | Channel/artist URL |
+| `name` | `String?` | Channel/artist name |
+
+**PageToken** — Opaque continuation token used for [pagination](#pagination). Returned as the `next` field of `StreamPage` / `SearchPage`; pass it back to the matching `…NextPage(…)` call. Treat it as opaque (do not construct or inspect it).
+
 ---
 
 ## Enums
@@ -782,7 +913,7 @@ Low-level HTTP utility for stream downloading.
 - **Members-only / premium content** is flagged but cannot be extracted without authentication.
 - **Muxed streams capped at 720p.** Higher resolutions are only available as separate video-only + audio-only streams that must be muxed client-side.
 - **Comment replies** use index-based lookup from the last fetched page — calling `getCommentReplies(index)` only works with indices from the most recently returned comment page.
-- **Pagination is stateful.** Search, comments, channel uploads, and playlist streams store pagination state on the native side. Calling `getNextPage()` returns the next page of the most recent query. Interleaving different queries will lose pagination state.
+- **Pagination uses page tokens (YouTube extractors).** Search, channel uploads, channel tabs, playlist streams, trending, and kiosks return a `PageToken` (`next`); pass it back to the matching `…NextPage(…)` call. Each list owns its own cursor, so independent lists can paginate concurrently without interfering. The generic `ServiceExtractor` (per-`serviceId` cursors) and `CommentsExtractor` (a single native cursor) still keep state natively — interleaving different queries on those will lose their position.
 
 ### Multi-Service (SoundCloud, Bandcamp, PeerTube, media.ccc.de)
 - **Feature coverage varies by service.** Not all services support all features (e.g., some may not have search suggestions or kiosks).
@@ -792,7 +923,7 @@ Low-level HTTP utility for stream downloading.
 - **No authentication.** Private or premium content on any service cannot be accessed.
 
 ### General
-- **No background extraction.** All extraction runs on a single background thread. Concurrent calls from multiple isolates will queue sequentially.
+- **Native thread pool.** Extraction runs on a bounded background thread pool, so independent calls (e.g. several feeds) execute concurrently rather than queuing behind one another. OkHttp connect/read/call timeouts bound each request so a stalled call can't hold a worker thread indefinitely.
 - **Network dependent.** All extraction requires an active internet connection. There is no offline caching.
 - **No download manager.** The plugin provides stream URLs but does not handle downloading, muxing, or file management.
 - **Stream URLs expire.** Media stream URLs returned by extractors are temporary and will expire (typically within hours). Do not persist them — re-extract when needed.
@@ -805,4 +936,12 @@ Low-level HTTP utility for stream downloading.
 
 ## License
 
-BSD 3-Clause License — see [LICENSE](LICENSE) for details.
+Licensed under the **GNU General Public License v3.0 (GPL-3.0)** — see [LICENSE](LICENSE) for the full text.
+
+This package wraps [NewPipe Extractor](https://github.com/TeamNewPipe/NewPipeExtractor), which is itself GPL-3.0. **Because this package builds against and links to NewPipe Extractor, any application that uses it is also subject to the GPL-3.0.** Ensure your app complies with the GPL-3.0 before distributing it.
+
+## Disclaimer
+
+This is an **unofficial** project. It is **not affiliated with, authorized by, or endorsed by** YouTube, Google LLC, SoundCloud, or the NewPipe project / TeamNewPipe. All product names, logos, and trademarks are the property of their respective owners.
+
+This package extracts publicly available data. You are **solely responsible** for ensuring your use complies with the Terms of Service of any platform you access (including the [YouTube Terms of Service](https://www.youtube.com/t/terms)) and with all applicable laws. **Use at your own risk** — the software is provided "as is", without warranty of any kind. See [NOTICE](NOTICE) for full attribution and disclaimers.

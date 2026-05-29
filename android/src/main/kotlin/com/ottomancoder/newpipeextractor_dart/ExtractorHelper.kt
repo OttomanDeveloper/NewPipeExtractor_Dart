@@ -2,7 +2,10 @@ package com.ottomancoder.newpipeextractor_dart
 
 import org.schabi.newpipe.extractor.Image
 import org.schabi.newpipe.extractor.InfoItem
+import org.schabi.newpipe.extractor.ListExtractor
+import org.schabi.newpipe.extractor.Page
 import org.schabi.newpipe.extractor.channel.ChannelInfoItem
+import org.schabi.newpipe.extractor.comments.CommentsInfoItem
 import org.schabi.newpipe.extractor.exceptions.ReCaptchaException
 import org.schabi.newpipe.extractor.playlist.PlaylistInfoItem
 import org.schabi.newpipe.extractor.services.youtube.linkHandler.YoutubeChannelLinkHandlerFactory
@@ -155,6 +158,77 @@ object ExtractorHelper {
             height = tryOrNull { frameset.frameHeight.toLong() },
             totalCount = tryOrNull { frameset.totalCount.toLong() }
         )
+    }
+
+    fun mapComment(comment: CommentsInfoItem): CommentDto {
+        return CommentDto(
+            author = tryOrNull { comment.uploaderName },
+            commentText = tryOrNull { comment.commentText?.content },
+            uploadDate = tryOrNull { comment.textualUploadDate },
+            uploaderAvatars = tryOrNull { imagesToList(comment.uploaderAvatars) },
+            uploaderUrl = tryOrNull { comment.uploaderUrl },
+            commentId = tryOrNull { comment.commentId },
+            likeCount = tryOrNull { comment.likeCount.toLong() },
+            hearted = tryOrNull { comment.isHeartedByUploader },
+            pinned = tryOrNull { comment.isPinned },
+            replyCount = tryOrNull { comment.replyCount.toLong() },
+            isChannelOwner = tryOrNull { comment.isChannelOwner },
+            isUploaderVerified = tryOrNull { comment.isUploaderVerified },
+            streamPosition = tryOrNull { comment.streamPosition.toLong() }
+        )
+    }
+
+    /// Splits a tab/channel page's mixed [InfoItem]s into a [TabPageDto].
+    fun categorizeTabItems(
+        items: List<InfoItem>,
+        hasNextPage: Boolean,
+        nextPage: PageDto? = null
+    ): TabPageDto {
+        val streams = mutableListOf<StreamInfoItemDto?>()
+        val playlists = mutableListOf<PlaylistInfoItemDto?>()
+        val channels = mutableListOf<ChannelInfoItemDto?>()
+        for (item in items) {
+            when (item.infoType) {
+                InfoItem.InfoType.STREAM -> streams.add(mapStreamInfoItem(item as StreamInfoItem))
+                InfoItem.InfoType.PLAYLIST -> playlists.add(mapPlaylistInfoItem(item as PlaylistInfoItem))
+                InfoItem.InfoType.CHANNEL -> channels.add(mapChannelInfoItem(item as ChannelInfoItem))
+                else -> { /* ignore */ }
+            }
+        }
+        return TabPageDto(
+            streamItems = streams,
+            playlistItems = playlists,
+            channelItems = channels,
+            hasNextPage = hasNextPage,
+            nextPage = nextPage
+        )
+    }
+
+    /// Maps a NewPipe continuation [Page] to a serializable [PageDto] (null-safe).
+    fun mapPage(page: Page?): PageDto? {
+        if (page == null) return null
+        return PageDto(
+            url = tryOrNull { page.url },
+            id = tryOrNull { page.id },
+            ids = tryOrNull { page.ids },
+            cookies = tryOrNull { page.cookies },
+            body = tryOrNull { page.body }
+        )
+    }
+
+    /// Reconstructs a NewPipe [Page] from a [PageDto] sent back by Dart.
+    fun pageFromDto(dto: PageDto): Page {
+        val ids: List<String>? = dto.ids?.filterNotNull()
+        val cookies: Map<String, String>? = dto.cookies
+            ?.mapNotNull { (k, v) -> if (k != null && v != null) k to v else null }
+            ?.toMap()
+        return Page(dto.url, dto.id, ids, cookies, dto.body)
+    }
+
+    /// Maps an [InfoItemsPage] of streams to items + a next-page token.
+    fun streamListPage(page: ListExtractor.InfoItemsPage<*>): StreamListPageDto {
+        val items = page.items.filterIsInstance<StreamInfoItem>().map { mapStreamInfoItem(it) }
+        return StreamListPageDto(items = items, nextPage = mapPage(page.nextPage))
     }
 
     fun categorizeInfoItems(items: List<InfoItem>): SearchResultDto {

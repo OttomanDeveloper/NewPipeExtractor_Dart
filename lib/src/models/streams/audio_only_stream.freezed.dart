@@ -21,12 +21,16 @@ AudioOnlyStream _$AudioOnlyStreamFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$AudioOnlyStream {
   String? get url => throw _privateConstructorUsedError;
+
+  /// Bitrate in kbps.
   int get averageBitrate => throw _privateConstructorUsedError;
   String? get formatName => throw _privateConstructorUsedError;
   String? get formatSuffix => throw _privateConstructorUsedError;
   String? get formatMimeType => throw _privateConstructorUsedError;
   String? get audioTrackName => throw _privateConstructorUsedError;
   String? get audioTrackLocale => throw _privateConstructorUsedError;
+
+  /// Audio track type: ORIGINAL, DUBBED, or DESCRIPTIVE.
   String? get audioTrackType => throw _privateConstructorUsedError;
 
   /// Serializes this AudioOnlyStream to a JSON map.
@@ -213,6 +217,8 @@ class _$AudioOnlyStreamImpl implements _AudioOnlyStream {
 
   @override
   final String? url;
+
+  /// Bitrate in kbps.
   @override
   @JsonKey()
   final int averageBitrate;
@@ -226,6 +232,8 @@ class _$AudioOnlyStreamImpl implements _AudioOnlyStream {
   final String? audioTrackName;
   @override
   final String? audioTrackLocale;
+
+  /// Audio track type: ORIGINAL, DUBBED, or DESCRIPTIVE.
   @override
   final String? audioTrackType;
 
@@ -302,6 +310,8 @@ abstract class _AudioOnlyStream implements AudioOnlyStream {
 
   @override
   String? get url;
+
+  /// Bitrate in kbps.
   @override
   int get averageBitrate;
   @override
@@ -314,6 +324,8 @@ abstract class _AudioOnlyStream implements AudioOnlyStream {
   String? get audioTrackName;
   @override
   String? get audioTrackLocale;
+
+  /// Audio track type: ORIGINAL, DUBBED, or DESCRIPTIVE.
   @override
   String? get audioTrackType;
 

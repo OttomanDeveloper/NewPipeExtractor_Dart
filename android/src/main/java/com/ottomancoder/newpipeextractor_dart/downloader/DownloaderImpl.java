@@ -31,7 +31,15 @@ public class DownloaderImpl extends Downloader {
     private OkHttpClient client;
 
     private DownloaderImpl(final OkHttpClient.Builder builder) {
-        this.client = builder.readTimeout(30, TimeUnit.SECONDS).build();
+        // callTimeout caps the entire request (DNS + connect + write + read + body),
+        // guaranteeing the worker thread is released even if a connection stalls.
+        // Without it, a single stuck request could block a thread indefinitely.
+        this.client = builder
+                .connectTimeout(15, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
+                .callTimeout(45, TimeUnit.SECONDS)
+                .build();
         this.cookies = new ConcurrentHashMap<>();
     }
 

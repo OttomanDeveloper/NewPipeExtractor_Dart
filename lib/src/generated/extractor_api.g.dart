@@ -704,16 +704,20 @@ class CommentsPageDto {
   CommentsPageDto({
     this.comments,
     this.hasNextPage,
+    this.nextPage,
   });
 
   List<CommentDto?>? comments;
 
   bool? hasNextPage;
 
+  PageDto? nextPage;
+
   Object encode() {
     return <Object?>[
       comments,
       hasNextPage,
+      nextPage,
     ];
   }
 
@@ -722,6 +726,7 @@ class CommentsPageDto {
     return CommentsPageDto(
       comments: (result[0] as List<Object?>?)?.cast<CommentDto?>(),
       hasNextPage: result[1] as bool?,
+      nextPage: result[2] as PageDto?,
     );
   }
 }
@@ -798,6 +803,73 @@ class FramesetDto {
   }
 }
 
+class PageDto {
+  PageDto({
+    this.url,
+    this.id,
+    this.ids,
+    this.cookies,
+    this.body,
+  });
+
+  String? url;
+
+  String? id;
+
+  List<String?>? ids;
+
+  Map<String?, String?>? cookies;
+
+  Uint8List? body;
+
+  Object encode() {
+    return <Object?>[
+      url,
+      id,
+      ids,
+      cookies,
+      body,
+    ];
+  }
+
+  static PageDto decode(Object result) {
+    result as List<Object?>;
+    return PageDto(
+      url: result[0] as String?,
+      id: result[1] as String?,
+      ids: (result[2] as List<Object?>?)?.cast<String?>(),
+      cookies: (result[3] as Map<Object?, Object?>?)?.cast<String?, String?>(),
+      body: result[4] as Uint8List?,
+    );
+  }
+}
+
+class StreamListPageDto {
+  StreamListPageDto({
+    this.items,
+    this.nextPage,
+  });
+
+  List<StreamInfoItemDto?>? items;
+
+  PageDto? nextPage;
+
+  Object encode() {
+    return <Object?>[
+      items,
+      nextPage,
+    ];
+  }
+
+  static StreamListPageDto decode(Object result) {
+    result as List<Object?>;
+    return StreamListPageDto(
+      items: (result[0] as List<Object?>?)?.cast<StreamInfoItemDto?>(),
+      nextPage: result[1] as PageDto?,
+    );
+  }
+}
+
 class StreamsDto {
   StreamsDto({
     this.audioStreams,
@@ -849,6 +921,7 @@ class SearchResultDto {
     this.videos,
     this.playlists,
     this.channels,
+    this.nextPage,
   });
 
   List<StreamInfoItemDto?>? videos;
@@ -857,11 +930,14 @@ class SearchResultDto {
 
   List<ChannelInfoItemDto?>? channels;
 
+  PageDto? nextPage;
+
   Object encode() {
     return <Object?>[
       videos,
       playlists,
       channels,
+      nextPage,
     ];
   }
 
@@ -871,6 +947,7 @@ class SearchResultDto {
       videos: (result[0] as List<Object?>?)?.cast<StreamInfoItemDto?>(),
       playlists: (result[1] as List<Object?>?)?.cast<PlaylistInfoItemDto?>(),
       channels: (result[2] as List<Object?>?)?.cast<ChannelInfoItemDto?>(),
+      nextPage: result[3] as PageDto?,
     );
   }
 }
@@ -881,6 +958,7 @@ class TabPageDto {
     this.playlistItems,
     this.channelItems,
     this.hasNextPage,
+    this.nextPage,
   });
 
   List<StreamInfoItemDto?>? streamItems;
@@ -891,12 +969,15 @@ class TabPageDto {
 
   bool? hasNextPage;
 
+  PageDto? nextPage;
+
   Object encode() {
     return <Object?>[
       streamItems,
       playlistItems,
       channelItems,
       hasNextPage,
+      nextPage,
     ];
   }
 
@@ -907,6 +988,90 @@ class TabPageDto {
       playlistItems: (result[1] as List<Object?>?)?.cast<PlaylistInfoItemDto?>(),
       channelItems: (result[2] as List<Object?>?)?.cast<ChannelInfoItemDto?>(),
       hasNextPage: result[3] as bool?,
+      nextPage: result[4] as PageDto?,
+    );
+  }
+}
+
+class LocalizationDto {
+  LocalizationDto({
+    this.languageCode,
+    this.countryCode,
+    this.localizationCode,
+  });
+
+  String? languageCode;
+
+  String? countryCode;
+
+  String? localizationCode;
+
+  Object encode() {
+    return <Object?>[
+      languageCode,
+      countryCode,
+      localizationCode,
+    ];
+  }
+
+  static LocalizationDto decode(Object result) {
+    result as List<Object?>;
+    return LocalizationDto(
+      languageCode: result[0] as String?,
+      countryCode: result[1] as String?,
+      localizationCode: result[2] as String?,
+    );
+  }
+}
+
+class ContentCountryDto {
+  ContentCountryDto({
+    this.countryCode,
+  });
+
+  String? countryCode;
+
+  Object encode() {
+    return <Object?>[
+      countryCode,
+    ];
+  }
+
+  static ContentCountryDto decode(Object result) {
+    result as List<Object?>;
+    return ContentCountryDto(
+      countryCode: result[0] as String?,
+    );
+  }
+}
+
+class SubscriptionItemDto {
+  SubscriptionItemDto({
+    this.serviceId,
+    this.url,
+    this.name,
+  });
+
+  int? serviceId;
+
+  String? url;
+
+  String? name;
+
+  Object encode() {
+    return <Object?>[
+      serviceId,
+      url,
+      name,
+    ];
+  }
+
+  static SubscriptionItemDto decode(Object result) {
+    result as List<Object?>;
+    return SubscriptionItemDto(
+      serviceId: result[0] as int?,
+      url: result[1] as String?,
+      name: result[2] as String?,
     );
   }
 }
@@ -989,17 +1154,32 @@ class _PigeonCodec extends StandardMessageCodec {
     }    else if (value is FramesetDto) {
       buffer.putUint8(141);
       writeValue(buffer, value.encode());
-    }    else if (value is StreamsDto) {
+    }    else if (value is PageDto) {
       buffer.putUint8(142);
       writeValue(buffer, value.encode());
-    }    else if (value is SearchResultDto) {
+    }    else if (value is StreamListPageDto) {
       buffer.putUint8(143);
       writeValue(buffer, value.encode());
-    }    else if (value is TabPageDto) {
+    }    else if (value is StreamsDto) {
       buffer.putUint8(144);
       writeValue(buffer, value.encode());
-    }    else if (value is ServiceInfoDto) {
+    }    else if (value is SearchResultDto) {
       buffer.putUint8(145);
+      writeValue(buffer, value.encode());
+    }    else if (value is TabPageDto) {
+      buffer.putUint8(146);
+      writeValue(buffer, value.encode());
+    }    else if (value is LocalizationDto) {
+      buffer.putUint8(147);
+      writeValue(buffer, value.encode());
+    }    else if (value is ContentCountryDto) {
+      buffer.putUint8(148);
+      writeValue(buffer, value.encode());
+    }    else if (value is SubscriptionItemDto) {
+      buffer.putUint8(149);
+      writeValue(buffer, value.encode());
+    }    else if (value is ServiceInfoDto) {
+      buffer.putUint8(150);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -1036,12 +1216,22 @@ class _PigeonCodec extends StandardMessageCodec {
       case 141: 
         return FramesetDto.decode(readValue(buffer)!);
       case 142: 
-        return StreamsDto.decode(readValue(buffer)!);
+        return PageDto.decode(readValue(buffer)!);
       case 143: 
-        return SearchResultDto.decode(readValue(buffer)!);
+        return StreamListPageDto.decode(readValue(buffer)!);
       case 144: 
-        return TabPageDto.decode(readValue(buffer)!);
+        return StreamsDto.decode(readValue(buffer)!);
       case 145: 
+        return SearchResultDto.decode(readValue(buffer)!);
+      case 146: 
+        return TabPageDto.decode(readValue(buffer)!);
+      case 147: 
+        return LocalizationDto.decode(readValue(buffer)!);
+      case 148: 
+        return ContentCountryDto.decode(readValue(buffer)!);
+      case 149: 
+        return SubscriptionItemDto.decode(readValue(buffer)!);
+      case 150: 
         return ServiceInfoDto.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -1211,15 +1401,15 @@ class SearchApi {
     }
   }
 
-  Future<SearchResultDto> getNextPage() async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.newpipeextractor_dart.SearchApi.getNextPage$pigeonVar_messageChannelSuffix';
+  Future<SearchResultDto> searchNextPage(String query, List<String?> filters, PageDto page) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.newpipeextractor_dart.SearchApi.searchNextPage$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
     final List<Object?>? pigeonVar_replyList =
-        await pigeonVar_channel.send(null) as List<Object?>?;
+        await pigeonVar_channel.send(<Object?>[query, filters, page]) as List<Object?>?;
     if (pigeonVar_replyList == null) {
       throw _createConnectionError(pigeonVar_channelName);
     } else if (pigeonVar_replyList.length > 1) {
@@ -1265,15 +1455,15 @@ class SearchApi {
     }
   }
 
-  Future<SearchResultDto> getNextMusicPage() async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.newpipeextractor_dart.SearchApi.getNextMusicPage$pigeonVar_messageChannelSuffix';
+  Future<SearchResultDto> searchMusicNextPage(String query, List<String?> filters, PageDto page) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.newpipeextractor_dart.SearchApi.searchMusicNextPage$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
     final List<Object?>? pigeonVar_replyList =
-        await pigeonVar_channel.send(null) as List<Object?>?;
+        await pigeonVar_channel.send(<Object?>[query, filters, page]) as List<Object?>?;
     if (pigeonVar_replyList == null) {
       throw _createConnectionError(pigeonVar_channelName);
     } else if (pigeonVar_replyList.length > 1) {
@@ -1360,7 +1550,7 @@ class ChannelApi {
     }
   }
 
-  Future<List<StreamInfoItemDto?>> getChannelUploads(String url) async {
+  Future<StreamListPageDto> getChannelUploads(String url) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.newpipeextractor_dart.ChannelApi.getChannelUploads$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
@@ -1383,11 +1573,11 @@ class ChannelApi {
         message: 'Host platform returned null value for non-null return value.',
       );
     } else {
-      return (pigeonVar_replyList[0] as List<Object?>?)!.cast<StreamInfoItemDto?>();
+      return (pigeonVar_replyList[0] as StreamListPageDto?)!;
     }
   }
 
-  Future<List<StreamInfoItemDto?>> getChannelNextPage() async {
+  Future<StreamListPageDto> getChannelNextPage(String url, PageDto page) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.newpipeextractor_dart.ChannelApi.getChannelNextPage$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
@@ -1395,7 +1585,7 @@ class ChannelApi {
       binaryMessenger: pigeonVar_binaryMessenger,
     );
     final List<Object?>? pigeonVar_replyList =
-        await pigeonVar_channel.send(null) as List<Object?>?;
+        await pigeonVar_channel.send(<Object?>[url, page]) as List<Object?>?;
     if (pigeonVar_replyList == null) {
       throw _createConnectionError(pigeonVar_channelName);
     } else if (pigeonVar_replyList.length > 1) {
@@ -1410,7 +1600,7 @@ class ChannelApi {
         message: 'Host platform returned null value for non-null return value.',
       );
     } else {
-      return (pigeonVar_replyList[0] as List<Object?>?)!.cast<StreamInfoItemDto?>();
+      return (pigeonVar_replyList[0] as StreamListPageDto?)!;
     }
   }
 
@@ -1441,7 +1631,7 @@ class ChannelApi {
     }
   }
 
-  Future<TabPageDto> getChannelTabNextPage() async {
+  Future<TabPageDto> getChannelTabNextPage(String url, String tabFilter, PageDto page) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.newpipeextractor_dart.ChannelApi.getChannelTabNextPage$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
@@ -1449,7 +1639,7 @@ class ChannelApi {
       binaryMessenger: pigeonVar_binaryMessenger,
     );
     final List<Object?>? pigeonVar_replyList =
-        await pigeonVar_channel.send(null) as List<Object?>?;
+        await pigeonVar_channel.send(<Object?>[url, tabFilter, page]) as List<Object?>?;
     if (pigeonVar_replyList == null) {
       throw _createConnectionError(pigeonVar_channelName);
     } else if (pigeonVar_replyList.length > 1) {
@@ -1509,7 +1699,7 @@ class PlaylistApi {
     }
   }
 
-  Future<List<StreamInfoItemDto?>> getPlaylistStreams(String url) async {
+  Future<StreamListPageDto> getPlaylistStreams(String url) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.newpipeextractor_dart.PlaylistApi.getPlaylistStreams$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
@@ -1532,11 +1722,11 @@ class PlaylistApi {
         message: 'Host platform returned null value for non-null return value.',
       );
     } else {
-      return (pigeonVar_replyList[0] as List<Object?>?)!.cast<StreamInfoItemDto?>();
+      return (pigeonVar_replyList[0] as StreamListPageDto?)!;
     }
   }
 
-  Future<List<StreamInfoItemDto?>> getPlaylistNextPage() async {
+  Future<StreamListPageDto> getPlaylistNextPage(String url, PageDto page) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.newpipeextractor_dart.PlaylistApi.getPlaylistNextPage$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
@@ -1544,7 +1734,7 @@ class PlaylistApi {
       binaryMessenger: pigeonVar_binaryMessenger,
     );
     final List<Object?>? pigeonVar_replyList =
-        await pigeonVar_channel.send(null) as List<Object?>?;
+        await pigeonVar_channel.send(<Object?>[url, page]) as List<Object?>?;
     if (pigeonVar_replyList == null) {
       throw _createConnectionError(pigeonVar_channelName);
     } else if (pigeonVar_replyList.length > 1) {
@@ -1559,7 +1749,7 @@ class PlaylistApi {
         message: 'Host platform returned null value for non-null return value.',
       );
     } else {
-      return (pigeonVar_replyList[0] as List<Object?>?)!.cast<StreamInfoItemDto?>();
+      return (pigeonVar_replyList[0] as StreamListPageDto?)!;
     }
   }
 }
@@ -1672,7 +1862,7 @@ class TrendingApi {
 
   final String pigeonVar_messageChannelSuffix;
 
-  Future<List<StreamInfoItemDto?>> getTrendingVideos() async {
+  Future<StreamListPageDto> getTrendingVideos() async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.newpipeextractor_dart.TrendingApi.getTrendingVideos$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
@@ -1695,7 +1885,34 @@ class TrendingApi {
         message: 'Host platform returned null value for non-null return value.',
       );
     } else {
-      return (pigeonVar_replyList[0] as List<Object?>?)!.cast<StreamInfoItemDto?>();
+      return (pigeonVar_replyList[0] as StreamListPageDto?)!;
+    }
+  }
+
+  Future<StreamListPageDto> getTrendingNextPage(PageDto page) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.newpipeextractor_dart.TrendingApi.getTrendingNextPage$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_channel.send(<Object?>[page]) as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else if (pigeonVar_replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (pigeonVar_replyList[0] as StreamListPageDto?)!;
     }
   }
 
@@ -1726,7 +1943,7 @@ class TrendingApi {
     }
   }
 
-  Future<List<StreamInfoItemDto?>> getKioskContent(String kioskId) async {
+  Future<StreamListPageDto> getKioskContent(String kioskId) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.newpipeextractor_dart.TrendingApi.getKioskContent$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
@@ -1749,7 +1966,34 @@ class TrendingApi {
         message: 'Host platform returned null value for non-null return value.',
       );
     } else {
-      return (pigeonVar_replyList[0] as List<Object?>?)!.cast<StreamInfoItemDto?>();
+      return (pigeonVar_replyList[0] as StreamListPageDto?)!;
+    }
+  }
+
+  Future<StreamListPageDto> getKioskNextPage(String kioskId, PageDto page) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.newpipeextractor_dart.TrendingApi.getKioskNextPage$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_channel.send(<Object?>[kioskId, page]) as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else if (pigeonVar_replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (pigeonVar_replyList[0] as StreamListPageDto?)!;
     }
   }
 }
@@ -2027,6 +2271,60 @@ class LocalizationApi {
       );
     } else {
       return;
+    }
+  }
+
+  Future<List<LocalizationDto?>> getSupportedLocalizations(int serviceId) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.newpipeextractor_dart.LocalizationApi.getSupportedLocalizations$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_channel.send(<Object?>[serviceId]) as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else if (pigeonVar_replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (pigeonVar_replyList[0] as List<Object?>?)!.cast<LocalizationDto?>();
+    }
+  }
+
+  Future<List<ContentCountryDto?>> getSupportedCountries(int serviceId) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.newpipeextractor_dart.LocalizationApi.getSupportedCountries$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_channel.send(<Object?>[serviceId]) as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else if (pigeonVar_replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (pigeonVar_replyList[0] as List<Object?>?)!.cast<ContentCountryDto?>();
     }
   }
 }
@@ -2353,6 +2651,245 @@ class ServiceChannelApi {
       );
     } else {
       return (pigeonVar_replyList[0] as List<Object?>?)!.cast<StreamInfoItemDto?>();
+    }
+  }
+
+  Future<TabPageDto> getServiceChannelTabContent(int serviceId, String url, String tabFilter) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.newpipeextractor_dart.ServiceChannelApi.getServiceChannelTabContent$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_channel.send(<Object?>[serviceId, url, tabFilter]) as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else if (pigeonVar_replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (pigeonVar_replyList[0] as TabPageDto?)!;
+    }
+  }
+
+  Future<TabPageDto> getServiceChannelTabNextPage(int serviceId) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.newpipeextractor_dart.ServiceChannelApi.getServiceChannelTabNextPage$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_channel.send(<Object?>[serviceId]) as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else if (pigeonVar_replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (pigeonVar_replyList[0] as TabPageDto?)!;
+    }
+  }
+}
+
+class ServiceCommentsApi {
+  /// Constructor for [ServiceCommentsApi].  The [binaryMessenger] named argument is
+  /// available for dependency injection.  If it is left null, the default
+  /// BinaryMessenger will be used which routes to the host platform.
+  ServiceCommentsApi({BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
+      : pigeonVar_binaryMessenger = binaryMessenger,
+        pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  final BinaryMessenger? pigeonVar_binaryMessenger;
+
+  static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
+
+  final String pigeonVar_messageChannelSuffix;
+
+  Future<CommentsPageDto> getComments(int serviceId, String url) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.newpipeextractor_dart.ServiceCommentsApi.getComments$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_channel.send(<Object?>[serviceId, url]) as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else if (pigeonVar_replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (pigeonVar_replyList[0] as CommentsPageDto?)!;
+    }
+  }
+
+  Future<CommentsPageDto> getNextCommentsPage(int serviceId) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.newpipeextractor_dart.ServiceCommentsApi.getNextCommentsPage$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_channel.send(<Object?>[serviceId]) as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else if (pigeonVar_replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (pigeonVar_replyList[0] as CommentsPageDto?)!;
+    }
+  }
+}
+
+class SubscriptionApi {
+  /// Constructor for [SubscriptionApi].  The [binaryMessenger] named argument is
+  /// available for dependency injection.  If it is left null, the default
+  /// BinaryMessenger will be used which routes to the host platform.
+  SubscriptionApi({BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
+      : pigeonVar_binaryMessenger = binaryMessenger,
+        pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  final BinaryMessenger? pigeonVar_binaryMessenger;
+
+  static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
+
+  final String pigeonVar_messageChannelSuffix;
+
+  Future<List<String?>> getSupportedSources(int serviceId) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.newpipeextractor_dart.SubscriptionApi.getSupportedSources$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_channel.send(<Object?>[serviceId]) as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else if (pigeonVar_replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (pigeonVar_replyList[0] as List<Object?>?)!.cast<String?>();
+    }
+  }
+
+  Future<String?> getRelatedUrl(int serviceId) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.newpipeextractor_dart.SubscriptionApi.getRelatedUrl$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_channel.send(<Object?>[serviceId]) as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return (pigeonVar_replyList[0] as String?);
+    }
+  }
+
+  Future<List<SubscriptionItemDto?>> fromChannelUrl(int serviceId, String channelUrl) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.newpipeextractor_dart.SubscriptionApi.fromChannelUrl$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_channel.send(<Object?>[serviceId, channelUrl]) as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else if (pigeonVar_replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (pigeonVar_replyList[0] as List<Object?>?)!.cast<SubscriptionItemDto?>();
+    }
+  }
+
+  Future<List<SubscriptionItemDto?>> fromInputStream(int serviceId, Uint8List content, String contentType) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.newpipeextractor_dart.SubscriptionApi.fromInputStream$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_channel.send(<Object?>[serviceId, content, contentType]) as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else if (pigeonVar_replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (pigeonVar_replyList[0] as List<Object?>?)!.cast<SubscriptionItemDto?>();
     }
   }
 }

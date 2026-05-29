@@ -514,20 +514,23 @@ data class CommentDto (
 /** Generated class from Pigeon that represents data sent in messages. */
 data class CommentsPageDto (
   val comments: List<CommentDto?>? = null,
-  val hasNextPage: Boolean? = null
+  val hasNextPage: Boolean? = null,
+  val nextPage: PageDto? = null
 )
  {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): CommentsPageDto {
       val comments = pigeonVar_list[0] as List<CommentDto?>?
       val hasNextPage = pigeonVar_list[1] as Boolean?
-      return CommentsPageDto(comments, hasNextPage)
+      val nextPage = pigeonVar_list[2] as PageDto?
+      return CommentsPageDto(comments, hasNextPage, nextPage)
     }
   }
   fun toList(): List<Any?> {
     return listOf(
       comments,
       hasNextPage,
+      nextPage,
     )
   }
 }
@@ -587,6 +590,57 @@ data class FramesetDto (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
+data class PageDto (
+  val url: String? = null,
+  val id: String? = null,
+  val ids: List<String?>? = null,
+  val cookies: Map<String?, String?>? = null,
+  val body: ByteArray? = null
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): PageDto {
+      val url = pigeonVar_list[0] as String?
+      val id = pigeonVar_list[1] as String?
+      val ids = pigeonVar_list[2] as List<String?>?
+      val cookies = pigeonVar_list[3] as Map<String?, String?>?
+      val body = pigeonVar_list[4] as ByteArray?
+      return PageDto(url, id, ids, cookies, body)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      url,
+      id,
+      ids,
+      cookies,
+      body,
+    )
+  }
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class StreamListPageDto (
+  val items: List<StreamInfoItemDto?>? = null,
+  val nextPage: PageDto? = null
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): StreamListPageDto {
+      val items = pigeonVar_list[0] as List<StreamInfoItemDto?>?
+      val nextPage = pigeonVar_list[1] as PageDto?
+      return StreamListPageDto(items, nextPage)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      items,
+      nextPage,
+    )
+  }
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
 data class StreamsDto (
   val audioStreams: List<AudioStreamDto?>? = null,
   val videoOnlyStreams: List<VideoStreamDto?>? = null,
@@ -623,7 +677,8 @@ data class StreamsDto (
 data class SearchResultDto (
   val videos: List<StreamInfoItemDto?>? = null,
   val playlists: List<PlaylistInfoItemDto?>? = null,
-  val channels: List<ChannelInfoItemDto?>? = null
+  val channels: List<ChannelInfoItemDto?>? = null,
+  val nextPage: PageDto? = null
 )
  {
   companion object {
@@ -631,7 +686,8 @@ data class SearchResultDto (
       val videos = pigeonVar_list[0] as List<StreamInfoItemDto?>?
       val playlists = pigeonVar_list[1] as List<PlaylistInfoItemDto?>?
       val channels = pigeonVar_list[2] as List<ChannelInfoItemDto?>?
-      return SearchResultDto(videos, playlists, channels)
+      val nextPage = pigeonVar_list[3] as PageDto?
+      return SearchResultDto(videos, playlists, channels, nextPage)
     }
   }
   fun toList(): List<Any?> {
@@ -639,6 +695,7 @@ data class SearchResultDto (
       videos,
       playlists,
       channels,
+      nextPage,
     )
   }
 }
@@ -648,7 +705,8 @@ data class TabPageDto (
   val streamItems: List<StreamInfoItemDto?>? = null,
   val playlistItems: List<PlaylistInfoItemDto?>? = null,
   val channelItems: List<ChannelInfoItemDto?>? = null,
-  val hasNextPage: Boolean? = null
+  val hasNextPage: Boolean? = null,
+  val nextPage: PageDto? = null
 )
  {
   companion object {
@@ -657,7 +715,8 @@ data class TabPageDto (
       val playlistItems = pigeonVar_list[1] as List<PlaylistInfoItemDto?>?
       val channelItems = pigeonVar_list[2] as List<ChannelInfoItemDto?>?
       val hasNextPage = pigeonVar_list[3] as Boolean?
-      return TabPageDto(streamItems, playlistItems, channelItems, hasNextPage)
+      val nextPage = pigeonVar_list[4] as PageDto?
+      return TabPageDto(streamItems, playlistItems, channelItems, hasNextPage, nextPage)
     }
   }
   fun toList(): List<Any?> {
@@ -666,6 +725,73 @@ data class TabPageDto (
       playlistItems,
       channelItems,
       hasNextPage,
+      nextPage,
+    )
+  }
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class LocalizationDto (
+  val languageCode: String? = null,
+  val countryCode: String? = null,
+  val localizationCode: String? = null
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): LocalizationDto {
+      val languageCode = pigeonVar_list[0] as String?
+      val countryCode = pigeonVar_list[1] as String?
+      val localizationCode = pigeonVar_list[2] as String?
+      return LocalizationDto(languageCode, countryCode, localizationCode)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      languageCode,
+      countryCode,
+      localizationCode,
+    )
+  }
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class ContentCountryDto (
+  val countryCode: String? = null
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): ContentCountryDto {
+      val countryCode = pigeonVar_list[0] as String?
+      return ContentCountryDto(countryCode)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      countryCode,
+    )
+  }
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class SubscriptionItemDto (
+  val serviceId: Long? = null,
+  val url: String? = null,
+  val name: String? = null
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): SubscriptionItemDto {
+      val serviceId = pigeonVar_list[0] as Long?
+      val url = pigeonVar_list[1] as String?
+      val name = pigeonVar_list[2] as String?
+      return SubscriptionItemDto(serviceId, url, name)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      serviceId,
+      url,
+      name,
     )
   }
 }
@@ -763,20 +889,45 @@ private open class ExtractorApiPigeonCodec : StandardMessageCodec() {
       }
       142.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          StreamsDto.fromList(it)
+          PageDto.fromList(it)
         }
       }
       143.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          SearchResultDto.fromList(it)
+          StreamListPageDto.fromList(it)
         }
       }
       144.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TabPageDto.fromList(it)
+          StreamsDto.fromList(it)
         }
       }
       145.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          SearchResultDto.fromList(it)
+        }
+      }
+      146.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          TabPageDto.fromList(it)
+        }
+      }
+      147.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          LocalizationDto.fromList(it)
+        }
+      }
+      148.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          ContentCountryDto.fromList(it)
+        }
+      }
+      149.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          SubscriptionItemDto.fromList(it)
+        }
+      }
+      150.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           ServiceInfoDto.fromList(it)
         }
@@ -838,20 +989,40 @@ private open class ExtractorApiPigeonCodec : StandardMessageCodec() {
         stream.write(141)
         writeValue(stream, value.toList())
       }
-      is StreamsDto -> {
+      is PageDto -> {
         stream.write(142)
         writeValue(stream, value.toList())
       }
-      is SearchResultDto -> {
+      is StreamListPageDto -> {
         stream.write(143)
         writeValue(stream, value.toList())
       }
-      is TabPageDto -> {
+      is StreamsDto -> {
         stream.write(144)
         writeValue(stream, value.toList())
       }
-      is ServiceInfoDto -> {
+      is SearchResultDto -> {
         stream.write(145)
+        writeValue(stream, value.toList())
+      }
+      is TabPageDto -> {
+        stream.write(146)
+        writeValue(stream, value.toList())
+      }
+      is LocalizationDto -> {
+        stream.write(147)
+        writeValue(stream, value.toList())
+      }
+      is ContentCountryDto -> {
+        stream.write(148)
+        writeValue(stream, value.toList())
+      }
+      is SubscriptionItemDto -> {
+        stream.write(149)
+        writeValue(stream, value.toList())
+      }
+      is ServiceInfoDto -> {
+        stream.write(150)
         writeValue(stream, value.toList())
       }
       else -> super.writeValue(stream, value)
@@ -962,9 +1133,9 @@ interface VideoExtractorApi {
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface SearchApi {
   fun searchYoutube(query: String, filters: List<String?>, callback: (Result<SearchResultDto>) -> Unit)
-  fun getNextPage(callback: (Result<SearchResultDto>) -> Unit)
+  fun searchNextPage(query: String, filters: List<String?>, page: PageDto, callback: (Result<SearchResultDto>) -> Unit)
   fun searchYoutubeMusic(query: String, filters: List<String?>, callback: (Result<SearchResultDto>) -> Unit)
-  fun getNextMusicPage(callback: (Result<SearchResultDto>) -> Unit)
+  fun searchMusicNextPage(query: String, filters: List<String?>, page: PageDto, callback: (Result<SearchResultDto>) -> Unit)
   fun getSearchSuggestions(query: String, callback: (Result<List<String?>>) -> Unit)
 
   companion object {
@@ -998,10 +1169,14 @@ interface SearchApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.newpipeextractor_dart.SearchApi.getNextPage$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.newpipeextractor_dart.SearchApi.searchNextPage$separatedMessageChannelSuffix", codec)
         if (api != null) {
-          channel.setMessageHandler { _, reply ->
-            api.getNextPage{ result: Result<SearchResultDto> ->
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val queryArg = args[0] as String
+            val filtersArg = args[1] as List<String?>
+            val pageArg = args[2] as PageDto
+            api.searchNextPage(queryArg, filtersArg, pageArg) { result: Result<SearchResultDto> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(wrapError(error))
@@ -1037,10 +1212,14 @@ interface SearchApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.newpipeextractor_dart.SearchApi.getNextMusicPage$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.newpipeextractor_dart.SearchApi.searchMusicNextPage$separatedMessageChannelSuffix", codec)
         if (api != null) {
-          channel.setMessageHandler { _, reply ->
-            api.getNextMusicPage{ result: Result<SearchResultDto> ->
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val queryArg = args[0] as String
+            val filtersArg = args[1] as List<String?>
+            val pageArg = args[2] as PageDto
+            api.searchMusicNextPage(queryArg, filtersArg, pageArg) { result: Result<SearchResultDto> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(wrapError(error))
@@ -1080,10 +1259,10 @@ interface SearchApi {
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface ChannelApi {
   fun getChannelInfo(url: String, callback: (Result<ChannelDto>) -> Unit)
-  fun getChannelUploads(url: String, callback: (Result<List<StreamInfoItemDto?>>) -> Unit)
-  fun getChannelNextPage(callback: (Result<List<StreamInfoItemDto?>>) -> Unit)
+  fun getChannelUploads(url: String, callback: (Result<StreamListPageDto>) -> Unit)
+  fun getChannelNextPage(url: String, page: PageDto, callback: (Result<StreamListPageDto>) -> Unit)
   fun getChannelTabContent(url: String, tabFilter: String, callback: (Result<TabPageDto>) -> Unit)
-  fun getChannelTabNextPage(callback: (Result<TabPageDto>) -> Unit)
+  fun getChannelTabNextPage(url: String, tabFilter: String, page: PageDto, callback: (Result<TabPageDto>) -> Unit)
 
   companion object {
     /** The codec used by ChannelApi. */
@@ -1120,7 +1299,7 @@ interface ChannelApi {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val urlArg = args[0] as String
-            api.getChannelUploads(urlArg) { result: Result<List<StreamInfoItemDto?>> ->
+            api.getChannelUploads(urlArg) { result: Result<StreamListPageDto> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(wrapError(error))
@@ -1137,8 +1316,11 @@ interface ChannelApi {
       run {
         val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.newpipeextractor_dart.ChannelApi.getChannelNextPage$separatedMessageChannelSuffix", codec)
         if (api != null) {
-          channel.setMessageHandler { _, reply ->
-            api.getChannelNextPage{ result: Result<List<StreamInfoItemDto?>> ->
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val urlArg = args[0] as String
+            val pageArg = args[1] as PageDto
+            api.getChannelNextPage(urlArg, pageArg) { result: Result<StreamListPageDto> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(wrapError(error))
@@ -1176,8 +1358,12 @@ interface ChannelApi {
       run {
         val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.newpipeextractor_dart.ChannelApi.getChannelTabNextPage$separatedMessageChannelSuffix", codec)
         if (api != null) {
-          channel.setMessageHandler { _, reply ->
-            api.getChannelTabNextPage{ result: Result<TabPageDto> ->
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val urlArg = args[0] as String
+            val tabFilterArg = args[1] as String
+            val pageArg = args[2] as PageDto
+            api.getChannelTabNextPage(urlArg, tabFilterArg, pageArg) { result: Result<TabPageDto> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(wrapError(error))
@@ -1197,8 +1383,8 @@ interface ChannelApi {
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface PlaylistApi {
   fun getPlaylistDetails(url: String, callback: (Result<PlaylistDto>) -> Unit)
-  fun getPlaylistStreams(url: String, callback: (Result<List<StreamInfoItemDto?>>) -> Unit)
-  fun getPlaylistNextPage(callback: (Result<List<StreamInfoItemDto?>>) -> Unit)
+  fun getPlaylistStreams(url: String, callback: (Result<StreamListPageDto>) -> Unit)
+  fun getPlaylistNextPage(url: String, page: PageDto, callback: (Result<StreamListPageDto>) -> Unit)
 
   companion object {
     /** The codec used by PlaylistApi. */
@@ -1235,7 +1421,7 @@ interface PlaylistApi {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val urlArg = args[0] as String
-            api.getPlaylistStreams(urlArg) { result: Result<List<StreamInfoItemDto?>> ->
+            api.getPlaylistStreams(urlArg) { result: Result<StreamListPageDto> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(wrapError(error))
@@ -1252,8 +1438,11 @@ interface PlaylistApi {
       run {
         val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.newpipeextractor_dart.PlaylistApi.getPlaylistNextPage$separatedMessageChannelSuffix", codec)
         if (api != null) {
-          channel.setMessageHandler { _, reply ->
-            api.getPlaylistNextPage{ result: Result<List<StreamInfoItemDto?>> ->
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val urlArg = args[0] as String
+            val pageArg = args[1] as PageDto
+            api.getPlaylistNextPage(urlArg, pageArg) { result: Result<StreamListPageDto> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(wrapError(error))
@@ -1348,9 +1537,11 @@ interface CommentsApi {
 }
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface TrendingApi {
-  fun getTrendingVideos(callback: (Result<List<StreamInfoItemDto?>>) -> Unit)
+  fun getTrendingVideos(callback: (Result<StreamListPageDto>) -> Unit)
+  fun getTrendingNextPage(page: PageDto, callback: (Result<StreamListPageDto>) -> Unit)
   fun listKiosks(callback: (Result<List<String?>>) -> Unit)
-  fun getKioskContent(kioskId: String, callback: (Result<List<StreamInfoItemDto?>>) -> Unit)
+  fun getKioskContent(kioskId: String, callback: (Result<StreamListPageDto>) -> Unit)
+  fun getKioskNextPage(kioskId: String, page: PageDto, callback: (Result<StreamListPageDto>) -> Unit)
 
   companion object {
     /** The codec used by TrendingApi. */
@@ -1365,7 +1556,27 @@ interface TrendingApi {
         val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.newpipeextractor_dart.TrendingApi.getTrendingVideos$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
-            api.getTrendingVideos{ result: Result<List<StreamInfoItemDto?>> ->
+            api.getTrendingVideos{ result: Result<StreamListPageDto> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.newpipeextractor_dart.TrendingApi.getTrendingNextPage$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val pageArg = args[0] as PageDto
+            api.getTrendingNextPage(pageArg) { result: Result<StreamListPageDto> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(wrapError(error))
@@ -1403,7 +1614,28 @@ interface TrendingApi {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val kioskIdArg = args[0] as String
-            api.getKioskContent(kioskIdArg) { result: Result<List<StreamInfoItemDto?>> ->
+            api.getKioskContent(kioskIdArg) { result: Result<StreamListPageDto> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.newpipeextractor_dart.TrendingApi.getKioskNextPage$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val kioskIdArg = args[0] as String
+            val pageArg = args[1] as PageDto
+            api.getKioskNextPage(kioskIdArg, pageArg) { result: Result<StreamListPageDto> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(wrapError(error))
@@ -1641,6 +1873,8 @@ interface CookieApi {
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface LocalizationApi {
   fun setLocalization(languageCode: String, countryCode: String, callback: (Result<Unit>) -> Unit)
+  fun getSupportedLocalizations(serviceId: Long, callback: (Result<List<LocalizationDto?>>) -> Unit)
+  fun getSupportedCountries(serviceId: Long, callback: (Result<List<ContentCountryDto?>>) -> Unit)
 
   companion object {
     /** The codec used by LocalizationApi. */
@@ -1664,6 +1898,46 @@ interface LocalizationApi {
                 reply.reply(wrapError(error))
               } else {
                 reply.reply(wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.newpipeextractor_dart.LocalizationApi.getSupportedLocalizations$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val serviceIdArg = args[0] as Long
+            api.getSupportedLocalizations(serviceIdArg) { result: Result<List<LocalizationDto?>> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.newpipeextractor_dart.LocalizationApi.getSupportedCountries$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val serviceIdArg = args[0] as Long
+            api.getSupportedCountries(serviceIdArg) { result: Result<List<ContentCountryDto?>> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(wrapResult(data))
               }
             }
           }
@@ -1875,6 +2149,8 @@ interface ServiceChannelApi {
   fun getChannelInfo(serviceId: Long, url: String, callback: (Result<ChannelDto>) -> Unit)
   fun getChannelContent(serviceId: Long, url: String, callback: (Result<List<StreamInfoItemDto?>>) -> Unit)
   fun getChannelContentNextPage(serviceId: Long, callback: (Result<List<StreamInfoItemDto?>>) -> Unit)
+  fun getServiceChannelTabContent(serviceId: Long, url: String, tabFilter: String, callback: (Result<TabPageDto>) -> Unit)
+  fun getServiceChannelTabNextPage(serviceId: Long, callback: (Result<TabPageDto>) -> Unit)
 
   companion object {
     /** The codec used by ServiceChannelApi. */
@@ -1934,6 +2210,208 @@ interface ServiceChannelApi {
             val args = message as List<Any?>
             val serviceIdArg = args[0] as Long
             api.getChannelContentNextPage(serviceIdArg) { result: Result<List<StreamInfoItemDto?>> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.newpipeextractor_dart.ServiceChannelApi.getServiceChannelTabContent$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val serviceIdArg = args[0] as Long
+            val urlArg = args[1] as String
+            val tabFilterArg = args[2] as String
+            api.getServiceChannelTabContent(serviceIdArg, urlArg, tabFilterArg) { result: Result<TabPageDto> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.newpipeextractor_dart.ServiceChannelApi.getServiceChannelTabNextPage$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val serviceIdArg = args[0] as Long
+            api.getServiceChannelTabNextPage(serviceIdArg) { result: Result<TabPageDto> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+    }
+  }
+}
+/** Generated interface from Pigeon that represents a handler of messages from Flutter. */
+interface ServiceCommentsApi {
+  fun getComments(serviceId: Long, url: String, callback: (Result<CommentsPageDto>) -> Unit)
+  fun getNextCommentsPage(serviceId: Long, callback: (Result<CommentsPageDto>) -> Unit)
+
+  companion object {
+    /** The codec used by ServiceCommentsApi. */
+    val codec: MessageCodec<Any?> by lazy {
+      ExtractorApiPigeonCodec()
+    }
+    /** Sets up an instance of `ServiceCommentsApi` to handle messages through the `binaryMessenger`. */
+    @JvmOverloads
+    fun setUp(binaryMessenger: BinaryMessenger, api: ServiceCommentsApi?, messageChannelSuffix: String = "") {
+      val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.newpipeextractor_dart.ServiceCommentsApi.getComments$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val serviceIdArg = args[0] as Long
+            val urlArg = args[1] as String
+            api.getComments(serviceIdArg, urlArg) { result: Result<CommentsPageDto> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.newpipeextractor_dart.ServiceCommentsApi.getNextCommentsPage$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val serviceIdArg = args[0] as Long
+            api.getNextCommentsPage(serviceIdArg) { result: Result<CommentsPageDto> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+    }
+  }
+}
+/** Generated interface from Pigeon that represents a handler of messages from Flutter. */
+interface SubscriptionApi {
+  fun getSupportedSources(serviceId: Long, callback: (Result<List<String?>>) -> Unit)
+  fun getRelatedUrl(serviceId: Long, callback: (Result<String?>) -> Unit)
+  fun fromChannelUrl(serviceId: Long, channelUrl: String, callback: (Result<List<SubscriptionItemDto?>>) -> Unit)
+  fun fromInputStream(serviceId: Long, content: ByteArray, contentType: String, callback: (Result<List<SubscriptionItemDto?>>) -> Unit)
+
+  companion object {
+    /** The codec used by SubscriptionApi. */
+    val codec: MessageCodec<Any?> by lazy {
+      ExtractorApiPigeonCodec()
+    }
+    /** Sets up an instance of `SubscriptionApi` to handle messages through the `binaryMessenger`. */
+    @JvmOverloads
+    fun setUp(binaryMessenger: BinaryMessenger, api: SubscriptionApi?, messageChannelSuffix: String = "") {
+      val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.newpipeextractor_dart.SubscriptionApi.getSupportedSources$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val serviceIdArg = args[0] as Long
+            api.getSupportedSources(serviceIdArg) { result: Result<List<String?>> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.newpipeextractor_dart.SubscriptionApi.getRelatedUrl$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val serviceIdArg = args[0] as Long
+            api.getRelatedUrl(serviceIdArg) { result: Result<String?> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.newpipeextractor_dart.SubscriptionApi.fromChannelUrl$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val serviceIdArg = args[0] as Long
+            val channelUrlArg = args[1] as String
+            api.fromChannelUrl(serviceIdArg, channelUrlArg) { result: Result<List<SubscriptionItemDto?>> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.newpipeextractor_dart.SubscriptionApi.fromInputStream$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val serviceIdArg = args[0] as Long
+            val contentArg = args[1] as ByteArray
+            val contentTypeArg = args[2] as String
+            api.fromInputStream(serviceIdArg, contentArg, contentTypeArg) { result: Result<List<SubscriptionItemDto?>> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(wrapError(error))

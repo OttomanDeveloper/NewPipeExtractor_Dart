@@ -15,3 +15,4 @@ build/
 !lib/src/generated/*.g.dart
 !lib/src/models/**/*.g.dart
 !lib/src/models/**/*.freezed.dart
+/docs/

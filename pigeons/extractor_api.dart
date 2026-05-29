@@ -148,6 +148,7 @@ class CommentDto {
 class CommentsPageDto {
   List<CommentDto?>? comments;
   bool? hasNextPage;
+  PageDto? nextPage;
 }
 
 class SegmentDto {
@@ -164,6 +165,19 @@ class FramesetDto {
   int? totalCount;
 }
 
+class PageDto {
+  String? url;
+  String? id;
+  List<String?>? ids;
+  Map<String?, String?>? cookies;
+  Uint8List? body;
+}
+
+class StreamListPageDto {
+  List<StreamInfoItemDto?>? items;
+  PageDto? nextPage;
+}
+
 class StreamsDto {
   List<AudioStreamDto?>? audioStreams;
   List<VideoStreamDto?>? videoOnlyStreams;
@@ -177,6 +191,7 @@ class SearchResultDto {
   List<StreamInfoItemDto?>? videos;
   List<PlaylistInfoItemDto?>? playlists;
   List<ChannelInfoItemDto?>? channels;
+  PageDto? nextPage;
 }
 
 class TabPageDto {
@@ -184,6 +199,23 @@ class TabPageDto {
   List<PlaylistInfoItemDto?>? playlistItems;
   List<ChannelInfoItemDto?>? channelItems;
   bool? hasNextPage;
+  PageDto? nextPage;
+}
+
+class LocalizationDto {
+  String? languageCode;
+  String? countryCode;
+  String? localizationCode;
+}
+
+class ContentCountryDto {
+  String? countryCode;
+}
+
+class SubscriptionItemDto {
+  int? serviceId;
+  String? url;
+  String? name;
 }
 
 // ─── Host APIs ───────────────────────────────────────────
@@ -209,13 +241,13 @@ abstract class SearchApi {
   SearchResultDto searchYoutube(String query, List<String?> filters);
 
   @async
-  SearchResultDto getNextPage();
+  SearchResultDto searchNextPage(String query, List<String?> filters, PageDto page);
 
   @async
   SearchResultDto searchYoutubeMusic(String query, List<String?> filters);
 
   @async
-  SearchResultDto getNextMusicPage();
+  SearchResultDto searchMusicNextPage(String query, List<String?> filters, PageDto page);
 
   @async
   List<String?> getSearchSuggestions(String query);
@@ -227,16 +259,16 @@ abstract class ChannelApi {
   ChannelDto getChannelInfo(String url);
 
   @async
-  List<StreamInfoItemDto?> getChannelUploads(String url);
+  StreamListPageDto getChannelUploads(String url);
 
   @async
-  List<StreamInfoItemDto?> getChannelNextPage();
+  StreamListPageDto getChannelNextPage(String url, PageDto page);
 
   @async
   TabPageDto getChannelTabContent(String url, String tabFilter);
 
   @async
-  TabPageDto getChannelTabNextPage();
+  TabPageDto getChannelTabNextPage(String url, String tabFilter, PageDto page);
 }
 
 @HostApi()
@@ -245,10 +277,10 @@ abstract class PlaylistApi {
   PlaylistDto getPlaylistDetails(String url);
 
   @async
-  List<StreamInfoItemDto?> getPlaylistStreams(String url);
+  StreamListPageDto getPlaylistStreams(String url);
 
   @async
-  List<StreamInfoItemDto?> getPlaylistNextPage();
+  StreamListPageDto getPlaylistNextPage(String url, PageDto page);
 }
 
 @HostApi()
@@ -266,13 +298,19 @@ abstract class CommentsApi {
 @HostApi()
 abstract class TrendingApi {
   @async
-  List<StreamInfoItemDto?> getTrendingVideos();
+  StreamListPageDto getTrendingVideos();
+
+  @async
+  StreamListPageDto getTrendingNextPage(PageDto page);
 
   @async
   List<String?> listKiosks();
 
   @async
-  List<StreamInfoItemDto?> getKioskContent(String kioskId);
+  StreamListPageDto getKioskContent(String kioskId);
+
+  @async
+  StreamListPageDto getKioskNextPage(String kioskId, PageDto page);
 }
 
 @HostApi()
@@ -312,6 +350,12 @@ abstract class CookieApi {
 abstract class LocalizationApi {
   @async
   void setLocalization(String languageCode, String countryCode);
+
+  @async
+  List<LocalizationDto?> getSupportedLocalizations(int serviceId);
+
+  @async
+  List<ContentCountryDto?> getSupportedCountries(int serviceId);
 }
 
 // ─── Multi-Service DTOs ─────────────────────────────────
@@ -364,6 +408,40 @@ abstract class ServiceChannelApi {
 
   @async
   List<StreamInfoItemDto?> getChannelContentNextPage(int serviceId);
+
+  @async
+  TabPageDto getServiceChannelTabContent(int serviceId, String url, String tabFilter);
+
+  @async
+  TabPageDto getServiceChannelTabNextPage(int serviceId);
+}
+
+@HostApi()
+abstract class ServiceCommentsApi {
+  @async
+  CommentsPageDto getComments(int serviceId, String url);
+
+  @async
+  CommentsPageDto getNextCommentsPage(int serviceId);
+}
+
+@HostApi()
+abstract class SubscriptionApi {
+  @async
+  List<String?> getSupportedSources(int serviceId);
+
+  @async
+  String? getRelatedUrl(int serviceId);
+
+  @async
+  List<SubscriptionItemDto?> fromChannelUrl(int serviceId, String channelUrl);
+
+  @async
+  List<SubscriptionItemDto?> fromInputStream(
+    int serviceId,
+    Uint8List content,
+    String contentType,
+  );
 }
 
 @HostApi()

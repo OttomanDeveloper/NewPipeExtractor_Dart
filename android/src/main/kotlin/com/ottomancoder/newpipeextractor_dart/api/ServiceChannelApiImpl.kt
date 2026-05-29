@@ -3,11 +3,14 @@ package com.ottomancoder.newpipeextractor_dart.api
 import android.os.Handler
 import com.ottomancoder.newpipeextractor_dart.*
 import com.ottomancoder.newpipeextractor_dart.toFlutterResult
+import org.schabi.newpipe.extractor.InfoItem
 import org.schabi.newpipe.extractor.ListExtractor
 import org.schabi.newpipe.extractor.NewPipe
 import org.schabi.newpipe.extractor.channel.ChannelExtractor
+import org.schabi.newpipe.extractor.channel.tabs.ChannelTabExtractor
 import org.schabi.newpipe.extractor.feed.FeedExtractor
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ExecutorService
 
 class ServiceChannelApiImpl(
@@ -19,6 +22,8 @@ class ServiceChannelApiImpl(
     private val pages = mutableMapOf<Long, ListExtractor.InfoItemsPage<StreamInfoItem>>()
     private val feedExtractors = mutableMapOf<Long, FeedExtractor>()
     private val feedPages = mutableMapOf<Long, ListExtractor.InfoItemsPage<StreamInfoItem>>()
+    private val tabExtractors = ConcurrentHashMap<Long, ChannelTabExtractor>()
+    private val tabPages = ConcurrentHashMap<Long, ListExtractor.InfoItemsPage<InfoItem>>()
 
     override fun getChannelInfo(serviceId: Long, url: String, callback: (Result<ChannelDto>) -> Unit) {
         executor.execute {
@@ -76,6 +81,59 @@ class ServiceChannelApiImpl(
                     handler.post { callback(Result.success(items)) }
                 } else {
                     handler.post { callback(Result.success(emptyList())) }
+                }
+            } catch (e: Exception) {
+                handler.post { callback(e.toFlutterResult()) }
+            }
+        }
+    }
+
+    override fun getServiceChannelTabContent(
+        serviceId: Long,
+        url: String,
+        tabFilter: String,
+        callback: (Result<TabPageDto>) -> Unit
+    ) {
+        executor.execute {
+            try {
+                val service = NewPipe.getService(serviceId.toInt())
+                val ch = service.getChannelExtractor(url)
+                ch.fetchPage()
+                val tab = ch.tabs.firstOrNull { it.contentFilters.contains(tabFilter) }
+                    ?: throw Exception("Tab '$tabFilter' not available for service $serviceId")
+                val tabExt = service.getChannelTabExtractor(tab)
+                tabExt.fetchPage()
+                tabExtractors[serviceId] = tabExt
+
+                val page = tabExt.initialPage
+                tabPages[serviceId] = page
+                val result = ExtractorHelper.categorizeTabItems(page.items, page.hasNextPage())
+                handler.post { callback(Result.success(result)) }
+            } catch (e: Exception) {
+                handler.post { callback(e.toFlutterResult()) }
+            }
+        }
+    }
+
+    override fun getServiceChannelTabNextPage(serviceId: Long, callback: (Result<TabPageDto>) -> Unit) {
+        executor.execute {
+            try {
+                val tabExt = tabExtractors[serviceId]
+                val page = tabPages[serviceId]
+                if (tabExt != null && page != null && page.hasNextPage()) {
+                    val nextPage = tabExt.getPage(page.nextPage)
+                    tabPages[serviceId] = nextPage
+                    val result = ExtractorHelper.categorizeTabItems(nextPage.items, nextPage.hasNextPage())
+                    handler.post { callback(Result.success(result)) }
+                } else {
+                    handler.post {
+                        callback(Result.success(TabPageDto(
+                            streamItems = emptyList(),
+                            playlistItems = emptyList(),
+                            channelItems = emptyList(),
+                            hasNextPage = false
+                        )))
+                    }
                 }
             } catch (e: Exception) {
                 handler.post { callback(e.toFlutterResult()) }

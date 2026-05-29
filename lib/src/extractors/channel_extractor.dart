@@ -4,12 +4,11 @@ import 'package:newpipeextractor_dart/src/models/channel_info_item.dart';
 import 'package:newpipeextractor_dart/src/models/playlist_info_item.dart';
 import 'package:newpipeextractor_dart/src/models/youtube_channel.dart';
 import 'package:newpipeextractor_dart/src/models/stream_info_item.dart';
+import 'package:newpipeextractor_dart/src/models/page_token.dart';
 import 'package:newpipeextractor_dart/src/utils/recaptcha_helper.dart';
 
-/// Extracts YouTube channel information, uploads, and tab-based content.
-///
-/// Channel tabs (Videos, Shorts, Live, Playlists) are accessed via
-/// [getChannelTabContent] using [ChannelTab] filter values.
+/// Extracts YouTube channel information, uploads, and tab-based content with
+/// stateless token pagination.
 class ChannelExtractor {
   static final _api = ChannelApi();
 
@@ -19,21 +18,31 @@ class ChannelExtractor {
     return m.mapChannel(dto);
   }
 
-  /// Returns channel uploads via the RSS feed.
-  static Future<List<StreamInfoItem>> getChannelUploads(String url) async {
-    final dtos = await withReCaptchaRetry(() => _api.getChannelUploads(url));
-    return dtos.whereType<StreamInfoItemDto>().map(m.mapStreamInfoItem).toList();
+  /// Returns the first page of channel uploads plus a continuation [PageToken].
+  static Future<({List<StreamInfoItem> items, PageToken? next})> getChannelUploads(String url) async {
+    final dto = await withReCaptchaRetry(() => _api.getChannelUploads(url));
+    return (
+      items: dto.items?.whereType<StreamInfoItemDto>().map(m.mapStreamInfoItem).toList() ?? [],
+      next: PageToken.fromDto(dto.nextPage),
+    );
   }
 
-  /// Returns the next page of channel uploads from [getChannelUploads].
-  static Future<List<StreamInfoItem>> getChannelNextPage() async {
-    final dtos = await withReCaptchaRetry(() => _api.getChannelNextPage());
-    return dtos.whereType<StreamInfoItemDto>().map(m.mapStreamInfoItem).toList();
+  /// Returns the next page of channel uploads for the given [token].
+  static Future<({List<StreamInfoItem> items, PageToken? next})> getChannelNextPage(
+    String url,
+    PageToken token,
+  ) async {
+    final dto = await withReCaptchaRetry(() => _api.getChannelNextPage(url, token.toDto()));
+    return (
+      items: dto.items?.whereType<StreamInfoItemDto>().map(m.mapStreamInfoItem).toList() ?? [],
+      next: PageToken.fromDto(dto.nextPage),
+    );
   }
 
   /// Returns content from a specific channel tab (e.g., 'shorts', 'playlists', 'livestreams').
-  static Future<({List<StreamInfoItem> streams, List<PlaylistInfoItem> playlists, List<ChannelInfoItem> channels, bool hasNextPage})> getChannelTabContent(
-    String url, String tabFilter,
+  static Future<({List<StreamInfoItem> streams, List<PlaylistInfoItem> playlists, List<ChannelInfoItem> channels, bool hasNextPage, PageToken? next})> getChannelTabContent(
+    String url,
+    String tabFilter,
   ) async {
     final dto = await withReCaptchaRetry(() => _api.getChannelTabContent(url, tabFilter));
     return (
@@ -41,17 +50,23 @@ class ChannelExtractor {
       playlists: dto.playlistItems?.whereType<PlaylistInfoItemDto>().map(m.mapPlaylistInfoItem).toList() ?? [],
       channels: dto.channelItems?.whereType<ChannelInfoItemDto>().map(m.mapChannelInfoItem).toList() ?? [],
       hasNextPage: dto.hasNextPage ?? false,
+      next: PageToken.fromDto(dto.nextPage),
     );
   }
 
-  /// Returns the next page of the most recent [getChannelTabContent] call.
-  static Future<({List<StreamInfoItem> streams, List<PlaylistInfoItem> playlists, List<ChannelInfoItem> channels, bool hasNextPage})> getChannelTabNextPage() async {
-    final dto = await withReCaptchaRetry(() => _api.getChannelTabNextPage());
+  /// Returns the next page of a channel tab for the given [token].
+  static Future<({List<StreamInfoItem> streams, List<PlaylistInfoItem> playlists, List<ChannelInfoItem> channels, bool hasNextPage, PageToken? next})> getChannelTabNextPage(
+    String url,
+    String tabFilter,
+    PageToken token,
+  ) async {
+    final dto = await withReCaptchaRetry(() => _api.getChannelTabNextPage(url, tabFilter, token.toDto()));
     return (
       streams: dto.streamItems?.whereType<StreamInfoItemDto>().map(m.mapStreamInfoItem).toList() ?? [],
       playlists: dto.playlistItems?.whereType<PlaylistInfoItemDto>().map(m.mapPlaylistInfoItem).toList() ?? [],
       channels: dto.channelItems?.whereType<ChannelInfoItemDto>().map(m.mapChannelInfoItem).toList() ?? [],
       hasNextPage: dto.hasNextPage ?? false,
+      next: PageToken.fromDto(dto.nextPage),
     );
   }
 }

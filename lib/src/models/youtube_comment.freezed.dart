@@ -32,6 +32,8 @@ mixin _$YoutubeComment {
   int get replyCount => throw _privateConstructorUsedError;
   bool get isChannelOwner => throw _privateConstructorUsedError;
   bool get isUploaderVerified => throw _privateConstructorUsedError;
+
+  /// Timestamp in the video this comment references, in seconds. Null if not a timestamped comment.
   int? get streamPosition => throw _privateConstructorUsedError;
 
   /// Serializes this YoutubeComment to a JSON map.
@@ -318,6 +320,8 @@ class _$YoutubeCommentImpl implements _YoutubeComment {
   @override
   @JsonKey()
   final bool isUploaderVerified;
+
+  /// Timestamp in the video this comment references, in seconds. Null if not a timestamped comment.
   @override
   final int? streamPosition;
 
@@ -434,6 +438,8 @@ abstract class _YoutubeComment implements YoutubeComment {
   bool get isChannelOwner;
   @override
   bool get isUploaderVerified;
+
+  /// Timestamp in the video this comment references, in seconds. Null if not a timestamped comment.
   @override
   int? get streamPosition;
 
