@@ -1,3 +1,25 @@
+## 2.0.1
+
+Upgraded the bundled NewPipe Extractor from v0.26.2 to v0.26.3.
+
+### Fixed (via upstream)
+
+* **YouTube stream extraction works around SABR enforcement** by using a
+  different player client — restores stream URL extraction where YouTube had
+  begun rejecting the previous client.
+* Playlist items and several properties in YouTube "lockup" view models
+  (view count, upload date) extract correctly again.
+* Audio track type is now derived from format xTags, so
+  `AudioOnlyStream.audioTrackType` / `audioTrackName` / `audioTrackLocale`
+  are populated more reliably on multi-audio videos.
+
+### Changed (via upstream)
+
+* Livestreams that expose only DASH/HLS manifests no longer fail extraction:
+  `getVideoStreams` can return empty stream lists while `VideoInfo.hlsUrl` /
+  `VideoInfo.dashMpdUrl` are set. Consumers should fall back to those URLs
+  when the stream lists are empty.
+
 ## 2.0.0
 
 Relicensed to GPL-3.0, plus stateless token-based list pagination so multiple

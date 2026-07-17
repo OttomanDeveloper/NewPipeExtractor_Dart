@@ -4,7 +4,7 @@
 [![pub points](https://img.shields.io/pub/points/newpipeextractor_dart)](https://pub.dev/packages/newpipeextractor_dart/score)
 [![likes](https://img.shields.io/pub/likes/newpipeextractor_dart)](https://pub.dev/packages/newpipeextractor_dart)
 
-A Flutter plugin that wraps the [NewPipe Extractor](https://github.com/TeamNewPipe/NewPipeExtractor) library (v0.26.2) for extracting media data from YouTube, SoundCloud, Bandcamp, PeerTube, and media.ccc.de on Android — no API key required.
+A Flutter plugin that wraps the [NewPipe Extractor](https://github.com/TeamNewPipe/NewPipeExtractor) library (v0.26.3) for extracting media data from YouTube, SoundCloud, Bandcamp, PeerTube, and media.ccc.de on Android — no API key required.
 
 ## Table of Contents
 
@@ -57,7 +57,7 @@ A Flutter plugin that wraps the [NewPipe Extractor](https://github.com/TeamNewPi
 **Android-only.** This plugin uses native Java/Kotlin code via the NewPipe Extractor library. It does not support iOS, web, macOS, Windows, or Linux.
 
 **Dependencies bundled automatically:**
-- [NewPipe Extractor](https://github.com/TeamNewPipe/NewPipeExtractor) v0.26.2
+- [NewPipe Extractor](https://github.com/TeamNewPipe/NewPipeExtractor) v0.26.3
 - OkHttp 4.12.0
 - [flutter_inappwebview](https://pub.dev/packages/flutter_inappwebview) ^6.1.5 (for reCAPTCHA solving)
 

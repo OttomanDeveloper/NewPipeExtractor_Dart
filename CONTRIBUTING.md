@@ -78,7 +78,7 @@ Dart Extractors + Freezed Models (lib/src/)
     ↕  (Pigeon-generated type-safe bridge)
 Kotlin API Implementations (android/src/main/kotlin/)
     ↕  (Java interop)
-NewPipe Extractor Library (v0.26.2)
+NewPipe Extractor Library (v0.26.3)
 ```
 
 **Data flows like this:**
