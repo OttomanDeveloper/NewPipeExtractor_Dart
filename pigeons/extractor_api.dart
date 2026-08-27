@@ -143,6 +143,7 @@ class CommentDto {
   bool? isChannelOwner;
   bool? isUploaderVerified;
   int? streamPosition;
+  bool? isEdited;
 }
 
 class CommentsPageDto {

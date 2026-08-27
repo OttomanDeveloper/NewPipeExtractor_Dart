@@ -170,6 +170,7 @@ YoutubeComment mapComment(CommentDto d) => YoutubeComment(
   isChannelOwner: d.isChannelOwner ?? false,
   isUploaderVerified: d.isUploaderVerified ?? false,
   streamPosition: d.streamPosition,
+  isEdited: d.isEdited ?? false,
 );
 
 CommentsPage mapCommentsPage(CommentsPageDto d) => CommentsPage(

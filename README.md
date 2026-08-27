@@ -57,7 +57,7 @@ A Flutter plugin that wraps the [NewPipe Extractor](https://github.com/TeamNewPi
 **Android-only.** This plugin uses native Java/Kotlin code via the NewPipe Extractor library. It does not support iOS, web, macOS, Windows, or Linux.
 
 **Dependencies bundled automatically:**
-- [NewPipe Extractor](https://github.com/TeamNewPipe/NewPipeExtractor) v0.26.3
+- [NewPipe Extractor](https://github.com/TeamNewPipe/NewPipeExtractor) v0.26.5
 - OkHttp 4.12.0
 - [flutter_inappwebview](https://pub.dev/packages/flutter_inappwebview) ^6.1.5 (for reCAPTCHA solving)
 
@@ -67,13 +67,35 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  newpipeextractor_dart: ^2.0.0
+  newpipeextractor_dart: ^2.0.2
 ```
 
 Or install via command line:
 
 ```bash
 flutter pub add newpipeextractor_dart
+```
+
+If your Android app uses Gradle’s `dependencyResolutionManagement` with `RepositoriesMode.PREFER_SETTINGS` or `FAIL_ON_PROJECT_REPOS`, add JitPack to the consuming app’s `android/settings.gradle` or `android/settings.gradle.kts`:
+
+```gradle
+maven { url 'https://jitpack.io' }
+```
+
+The plugin’s Android module also declares this repository, but Gradle settings-level repository policies can override project repositories.
+
+Because the native dependency uses Java 8+ APIs, enable core-library desugaring in the consuming app and add the matching dependency:
+
+```gradle
+android {
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+    }
+}
+
+dependencies {
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'
+}
 ```
 
 Import in your Dart code:
@@ -606,6 +628,7 @@ Lightweight video item used in lists (search results, playlists, trending, etc.)
 | `isChannelOwner` | `bool` | Author is the video uploader |
 | `isUploaderVerified` | `bool` | Author has verified badge |
 | `streamPosition` | `int?` | Timestamp reference in video |
+| `isEdited` | `bool` | Whether the comment was edited by its author |
 
 ### SearchResult
 

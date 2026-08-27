@@ -174,7 +174,8 @@ object ExtractorHelper {
             replyCount = tryOrNull { comment.replyCount.toLong() },
             isChannelOwner = tryOrNull { comment.isChannelOwner },
             isUploaderVerified = tryOrNull { comment.isUploaderVerified },
-            streamPosition = tryOrNull { comment.streamPosition.toLong() }
+            streamPosition = tryOrNull { comment.streamPosition.toLong() },
+            isEdited = tryOrNull { comment.isEdited }
         )
     }
 

@@ -342,7 +342,7 @@ This regenerates:
 After editing any `@freezed` model in `lib/src/models/`:
 
 ```bash
-dart run build_runner build --delete-conflicting-outputs
+dart run build_runner build
 ```
 
 ### Run analysis and tests
@@ -457,7 +457,7 @@ static Future<SomeModel> newMethod(String param) async {
 
 ```bash
 dart run pigeon --input pigeons/extractor_api.dart
-dart run build_runner build --delete-conflicting-outputs
+dart run build_runner build
 dart analyze
 flutter test
 ```

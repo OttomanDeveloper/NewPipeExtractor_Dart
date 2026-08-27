@@ -1,3 +1,16 @@
+## 2.0.2
+
+Upgraded the bundled NewPipe Extractor from v0.26.3 to v0.26.5.
+
+### Added
+
+* Exposed `YoutubeComment.isEdited` from the native NewPipe Extractor bridge.
+
+### Fixed (via upstream)
+
+* Fixed media.ccc.de live-stream extraction.
+* Fixed YouTube playlist continuation fetching.
+
 ## 2.0.1
 
 Upgraded the bundled NewPipe Extractor from v0.26.2 to v0.26.3.

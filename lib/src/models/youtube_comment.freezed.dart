@@ -35,6 +35,7 @@ mixin _$YoutubeComment {
 
   /// Timestamp in the video this comment references, in seconds. Null if not a timestamped comment.
   int? get streamPosition => throw _privateConstructorUsedError;
+  bool get isEdited => throw _privateConstructorUsedError;
 
   /// Serializes this YoutubeComment to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -65,7 +66,8 @@ abstract class $YoutubeCommentCopyWith<$Res> {
       int replyCount,
       bool isChannelOwner,
       bool isUploaderVerified,
-      int? streamPosition});
+      int? streamPosition,
+      bool isEdited});
 }
 
 /// @nodoc
@@ -96,6 +98,7 @@ class _$YoutubeCommentCopyWithImpl<$Res, $Val extends YoutubeComment>
     Object? isChannelOwner = null,
     Object? isUploaderVerified = null,
     Object? streamPosition = freezed,
+    Object? isEdited = null,
   }) {
     return _then(_value.copyWith(
       author: freezed == author
@@ -150,6 +153,10 @@ class _$YoutubeCommentCopyWithImpl<$Res, $Val extends YoutubeComment>
           ? _value.streamPosition
           : streamPosition // ignore: cast_nullable_to_non_nullable
               as int?,
+      isEdited: null == isEdited
+          ? _value.isEdited
+          : isEdited // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -175,7 +182,8 @@ abstract class _$$YoutubeCommentImplCopyWith<$Res>
       int replyCount,
       bool isChannelOwner,
       bool isUploaderVerified,
-      int? streamPosition});
+      int? streamPosition,
+      bool isEdited});
 }
 
 /// @nodoc
@@ -204,6 +212,7 @@ class __$$YoutubeCommentImplCopyWithImpl<$Res>
     Object? isChannelOwner = null,
     Object? isUploaderVerified = null,
     Object? streamPosition = freezed,
+    Object? isEdited = null,
   }) {
     return _then(_$YoutubeCommentImpl(
       author: freezed == author
@@ -258,6 +267,10 @@ class __$$YoutubeCommentImplCopyWithImpl<$Res>
           ? _value.streamPosition
           : streamPosition // ignore: cast_nullable_to_non_nullable
               as int?,
+      isEdited: null == isEdited
+          ? _value.isEdited
+          : isEdited // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -278,7 +291,8 @@ class _$YoutubeCommentImpl implements _YoutubeComment {
       this.replyCount = 0,
       this.isChannelOwner = false,
       this.isUploaderVerified = false,
-      this.streamPosition})
+      this.streamPosition,
+      this.isEdited = false})
       : _uploaderAvatars = uploaderAvatars;
 
   factory _$YoutubeCommentImpl.fromJson(Map<String, dynamic> json) =>
@@ -324,10 +338,12 @@ class _$YoutubeCommentImpl implements _YoutubeComment {
   /// Timestamp in the video this comment references, in seconds. Null if not a timestamped comment.
   @override
   final int? streamPosition;
+  @override
+  final bool isEdited;
 
   @override
   String toString() {
-    return 'YoutubeComment(author: $author, commentText: $commentText, uploadDate: $uploadDate, uploaderAvatars: $uploaderAvatars, uploaderUrl: $uploaderUrl, commentId: $commentId, likeCount: $likeCount, hearted: $hearted, pinned: $pinned, replyCount: $replyCount, isChannelOwner: $isChannelOwner, isUploaderVerified: $isUploaderVerified, streamPosition: $streamPosition)';
+    return 'YoutubeComment(author: $author, commentText: $commentText, uploadDate: $uploadDate, uploaderAvatars: $uploaderAvatars, uploaderUrl: $uploaderUrl, commentId: $commentId, likeCount: $likeCount, hearted: $hearted, pinned: $pinned, replyCount: $replyCount, isChannelOwner: $isChannelOwner, isUploaderVerified: $isUploaderVerified, streamPosition: $streamPosition, isEdited: $isEdited)';
   }
 
   @override
@@ -357,7 +373,8 @@ class _$YoutubeCommentImpl implements _YoutubeComment {
             (identical(other.isUploaderVerified, isUploaderVerified) ||
                 other.isUploaderVerified == isUploaderVerified) &&
             (identical(other.streamPosition, streamPosition) ||
-                other.streamPosition == streamPosition));
+                other.streamPosition == streamPosition) &&
+            (identical(other.isEdited, isEdited) || other.isEdited == isEdited));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -376,7 +393,8 @@ class _$YoutubeCommentImpl implements _YoutubeComment {
       replyCount,
       isChannelOwner,
       isUploaderVerified,
-      streamPosition);
+      streamPosition,
+      isEdited);
 
   /// Create a copy of YoutubeComment
   /// with the given fields replaced by the non-null parameter values.
@@ -409,7 +427,8 @@ abstract class _YoutubeComment implements YoutubeComment {
       final int replyCount,
       final bool isChannelOwner,
       final bool isUploaderVerified,
-      final int? streamPosition}) = _$YoutubeCommentImpl;
+      final int? streamPosition,
+      final bool isEdited}) = _$YoutubeCommentImpl;
 
   factory _YoutubeComment.fromJson(Map<String, dynamic> json) =
       _$YoutubeCommentImpl.fromJson;
@@ -442,6 +461,8 @@ abstract class _YoutubeComment implements YoutubeComment {
   /// Timestamp in the video this comment references, in seconds. Null if not a timestamped comment.
   @override
   int? get streamPosition;
+  @override
+  bool get isEdited;
 
   /// Create a copy of YoutubeComment
   /// with the given fields replaced by the non-null parameter values.

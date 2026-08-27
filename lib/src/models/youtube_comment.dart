@@ -21,6 +21,9 @@ class YoutubeComment with _$YoutubeComment {
 
     /// Timestamp in the video this comment references, in seconds. Null if not a timestamped comment.
     int? streamPosition,
+
+    /// Whether the comment was edited by its author.
+    @Default(false) bool isEdited,
   }) = _YoutubeComment;
 
   factory YoutubeComment.fromJson(Map<String, dynamic> json) =>

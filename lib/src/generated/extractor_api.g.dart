@@ -634,6 +634,7 @@ class CommentDto {
     this.isChannelOwner,
     this.isUploaderVerified,
     this.streamPosition,
+    this.isEdited,
   });
 
   String? author;
@@ -662,6 +663,8 @@ class CommentDto {
 
   int? streamPosition;
 
+  bool? isEdited;
+
   Object encode() {
     return <Object?>[
       author,
@@ -677,6 +680,7 @@ class CommentDto {
       isChannelOwner,
       isUploaderVerified,
       streamPosition,
+      isEdited,
     ];
   }
 
@@ -696,6 +700,7 @@ class CommentDto {
       isChannelOwner: result[10] as bool?,
       isUploaderVerified: result[11] as bool?,
       streamPosition: result[12] as int?,
+      isEdited: result[13] as bool?,
     );
   }
 }

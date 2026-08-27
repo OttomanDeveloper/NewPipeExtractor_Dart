@@ -24,6 +24,7 @@ _$YoutubeCommentImpl _$$YoutubeCommentImplFromJson(Map<String, dynamic> json) =>
       isChannelOwner: json['isChannelOwner'] as bool? ?? false,
       isUploaderVerified: json['isUploaderVerified'] as bool? ?? false,
       streamPosition: (json['streamPosition'] as num?)?.toInt(),
+      isEdited: json['isEdited'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$YoutubeCommentImplToJson(
@@ -42,4 +43,5 @@ Map<String, dynamic> _$$YoutubeCommentImplToJson(
       'isChannelOwner': instance.isChannelOwner,
       'isUploaderVerified': instance.isUploaderVerified,
       'streamPosition': instance.streamPosition,
+      'isEdited': instance.isEdited,
     };

@@ -471,7 +471,8 @@ data class CommentDto (
   val replyCount: Long? = null,
   val isChannelOwner: Boolean? = null,
   val isUploaderVerified: Boolean? = null,
-  val streamPosition: Long? = null
+  val streamPosition: Long? = null,
+  val isEdited: Boolean? = null
 )
  {
   companion object {
@@ -489,7 +490,8 @@ data class CommentDto (
       val isChannelOwner = pigeonVar_list[10] as Boolean?
       val isUploaderVerified = pigeonVar_list[11] as Boolean?
       val streamPosition = pigeonVar_list[12] as Long?
-      return CommentDto(author, commentText, uploadDate, uploaderAvatars, uploaderUrl, commentId, likeCount, hearted, pinned, replyCount, isChannelOwner, isUploaderVerified, streamPosition)
+      val isEdited = pigeonVar_list[13] as Boolean?
+      return CommentDto(author, commentText, uploadDate, uploaderAvatars, uploaderUrl, commentId, likeCount, hearted, pinned, replyCount, isChannelOwner, isUploaderVerified, streamPosition, isEdited)
     }
   }
   fun toList(): List<Any?> {
@@ -507,6 +509,7 @@ data class CommentDto (
       isChannelOwner,
       isUploaderVerified,
       streamPosition,
+      isEdited,
     )
   }
 }
